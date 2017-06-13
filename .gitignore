@@ -2,3 +2,4 @@ Configuration.js
 .DS_Store
 lib
 coverage
+node_modules
