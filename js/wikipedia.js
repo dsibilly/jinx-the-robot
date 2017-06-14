@@ -3,8 +3,7 @@ import wiki from 'wikijs';
 
 const wikipedia = (bot, message, query) => {
     if (!query) {
-        message.channel.send('usage: !wiki query');
-        return Promise.resolve();
+        return message.channel.send('usage: !wiki query');
     }
 
     return wiki().search(query, 1).then(data => wiki().page(data.results[0]).then(page => {
