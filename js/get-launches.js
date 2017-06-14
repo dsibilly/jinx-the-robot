@@ -45,8 +45,16 @@ const timeToLaunch = date => {
 
 export default (bot, message) => new Promise((resolve, reject) => {
     getLaunches(1).then(launches => {
-        const nextLaunch = launches[0],
-            windowOpens = new Date(nextLaunch.windowstart);
+        const nextLaunch = launches[0];
+        let windowOpens;
+
+        if (!nextLaunch || !nextLaunch.windowstart) {
+            message.channel.send('I\'m having trouble finding the next rocket launch right now. Please try again later!').then(() => {
+                resolve();
+            });
+        }
+
+        windowOpens = new Date(nextLaunch.windowstart);
 
         message.channel.send({
             embed: new Discord.RichEmbed()
