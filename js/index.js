@@ -2,11 +2,14 @@ import Bunyan from 'bunyan';
 import config from '../Configuration';
 import Discord from 'discord.js';
 import getLaunches from './get-launches';
+import packageInfo from '../package.json';
 import wikipedia from './wikipedia';
 
 const _log = Bunyan.createLogger({
         name: 'jinx'
     }),
+    _name = packageInfo.name,
+    _version = packageInfo.version,
     aliases = {
         nl: 'nextLaunch'
     },
@@ -34,7 +37,7 @@ const _log = Bunyan.createLogger({
                 _log.info({
                     user: message.author.tag
                 }, 'Sending ping response');
-                return message.channel.send(`${message.author.tag} pong!`).then(() => new Promise((resolve, reject) => {
+                return message.channel.send(`<@${message.author.id}> pong!`).then(() => new Promise((resolve, reject) => {
                     if (suffix) {
                         message.channel.send(`${config.commandPrefix}ping takes no arguments...`).then(resolve).catch(reject);
                         return;
@@ -57,7 +60,9 @@ const _log = Bunyan.createLogger({
     token = config.discord.token;
 
 bot.on('ready', () => {
-    _log.info('Jinx Discord bot online!');
+    _log.info({
+        version: `v${_version}`
+    }, `${_name} Discord bot online!`);
 });
 
 bot.on('guildMemberAdd', member => {
@@ -94,7 +99,6 @@ bot.on('message', message => {
                 query: suffix
             }, 'Dealiasing command');
             commandText = alias;
-            suffix = `${suffix}`;
         }
 
         command = commands[commandText];
@@ -153,6 +157,7 @@ bot.on('message', message => {
                 }, 'Command processed');
             }).catch(error => {
                 message.channel.send(`**Jinx Command Error**: ${commandText} failed!\nStack:\n${error.stack}`);
+                _log.error(error, `${_name} Command Error`);
             });
         }
     }
