@@ -1,6 +1,26 @@
 import Discord from 'discord.js';
 import wiki from 'wikijs';
 
+/**
+ * An object for interacting with the Discord API.
+ * @typedef Client
+ * @extends {EventEmitter}
+ */
+
+/**
+* Represents a message on Discord.
+* @typedef Message
+* @property {User} author The author of the message
+* @property {TextChannel|DMChannel|GroupDMChannel} channel The channel that the message was sent in
+*/
+
+/**
+ * Query Wikipedia with a search string.
+ * @arg {Client} bot The client object
+ * @arg {Message} message The triggering Discord message
+ * @arg {string} query The search query string for Wikipedia
+ * @returns {Promise} A Promise object
+ */
 const wikipedia = (bot, message, query) => {
     if (!query) {
         return message.channel.send('usage: !wiki query');
