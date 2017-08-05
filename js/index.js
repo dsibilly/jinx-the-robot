@@ -59,6 +59,8 @@ const _log = Bunyan.createLogger({
     },
     token = config.discord.token;
 
+bot.log = _log;
+
 bot.on('ready', () => {
     _log.info({
         version: `v${_version}`
