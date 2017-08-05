@@ -48,28 +48,36 @@ export default (bot, message) => new Promise((resolve, reject) => {
         const nextLaunch = launches[0];
         let windowOpens;
 
-        if (!nextLaunch || !nextLaunch.windowstart) {
+        if (!launches.length) {
+            bot.log.warn('No launches with firm launch dates found');
+            message.channel.send('There are no upcoming launches with firm launch dates. Check back later!').then(() => {
+                resolve();
+            });
+        } else if (!nextLaunch || !nextLaunch.windowstart) {
+            bot.log.warn({
+                launches
+            }, 'Unable to process rocket launch info');
             message.channel.send('I\'m having trouble finding the next rocket launch right now. Please try again later!').then(() => {
                 resolve();
             });
+        } else {
+            windowOpens = new Date(nextLaunch.windowstart);
+
+            message.channel.send({
+                embed: new Discord.RichEmbed()
+                    .setTitle('Next Rocket Launch')
+                    // .setAuthor(bot.user.username, bot.user.avatarURL)
+                    .setColor(0x00AE86).setThumbnail(nextLaunch.rocket.imageURL)
+                    .setURL(nextLaunch.vidURLs[0])
+                    .addField('Date', `${windowOpens} (${timeToLaunch(windowOpens)})`)
+                    .addField('Mission', nextLaunch.missions[0].name)
+                    .addField('Launch Vehicle', nextLaunch.rocket.name)
+                    .addField('Launch Site', nextLaunch.location.pads[0].name)
+            }).then(() => {
+                resolve();
+            }).catch(error => {
+                reject(error);
+            });
         }
-
-        windowOpens = new Date(nextLaunch.windowstart);
-
-        message.channel.send({
-            embed: new Discord.RichEmbed()
-                .setTitle('Next Rocket Launch')
-                // .setAuthor(bot.user.username, bot.user.avatarURL)
-                .setColor(0x00AE86).setThumbnail(nextLaunch.rocket.imageURL)
-                .setURL(nextLaunch.vidURLs[0])
-                .addField('Date', `${windowOpens} (${timeToLaunch(windowOpens)})`)
-                .addField('Mission', nextLaunch.missions[0].name)
-                .addField('Launch Vehicle', nextLaunch.rocket.name)
-                .addField('Launch Site', nextLaunch.location.pads[0].name)
-        }).then(() => {
-            resolve();
-        }).catch(error => {
-            reject(error);
-        });
     });
 });
