@@ -2,7 +2,7 @@ import {
     Client
 } from 'node-rest-client';
 
-import config from '../Configuration';
+import config from '../../Configuration';
 
 const args = {
         headers: {

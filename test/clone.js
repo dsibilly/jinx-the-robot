@@ -7,7 +7,7 @@ import {
     expect
 } from 'chai';
 
-import clone from '../js/clone';
+import clone from '../js/util/clone';
 
 describe('clone', () => {
     it('should return an object', () => {
