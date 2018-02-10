@@ -1,34 +1,35 @@
+/**
+The wiki command.
+Queries the English-language Wikipedia with a search string.
+
+@module commands/wikipedia
+*/
+import _Error from 'isotropic-error';
 import Discord from 'discord.js';
 import wiki from 'wikijs';
 
-/**
- * An object for interacting with the Discord API.
- * @typedef Client
- * @extends {EventEmitter}
- */
-
-/**
-* Represents a message on Discord.
-* @typedef Message
-* @property {User} author The author of the message
-* @property {TextChannel|DMChannel|GroupDMChannel} channel The channel that the message was sent in
-*/
-
 const wikipedia = {
-    description: '',
     /**
-     * Query Wikipedia with a search string.
-     * @arg {Jinx} jinx The jinx object
-     * @arg {Message} message The triggering Discord message
-     * @arg {string} query The search query string for Wikipedia
-     * @returns {Promise} A Promise object
-     */
-    process: (jinx, message, query) => {
-        if (!query) {
+    @property {String} description
+    */
+    description: '',
+
+    /**
+    Query Wikipedia with a search string.
+
+    @method process
+    @arg {Jinx} jinx The jinx object
+    @arg {Discord.Message} message The triggering Discord message
+    @arg {String} query The search query string for Wikipedia
+    @returns {Promise<Discord.Message>} A Promise object
+    */
+    process: (jinx, message, query) => new Promise((resolve, reject) => {
+        if (!query) { // No query; print usage info
             return message.channel.send('usage: !wiki query');
         }
 
-        return wiki().search(query, 1).then(data => wiki().page(data.results[0]).then(page => {
+        // Query Wikipedia and process the result into a human-readable response
+        wiki().search(query, 1).then(data => wiki().page(data.results[0]).then(page => {
             page.summary().then(summary => Promise.resolve(summary.toString().split('\n').reduce((text, paragraph) => {
                 if (text !== '' || !paragraph) {
                     return text;
@@ -42,7 +43,7 @@ const wikipedia = {
             }, ''))).then(summaryText => {
                 const pageTitle = page.raw.title,
                     canonicalUrl = page.raw.canonicalurl,
-
+                    // Prepare a Discord RichEmbed
                     embed = new Discord.RichEmbed()
                         .setTitle(pageTitle)
                         .setURL(canonicalUrl)
@@ -52,7 +53,7 @@ const wikipedia = {
 
                 return message.channel.send({
                     embed
-                }).then(() => {
+                }).then(newMessage => {
                     jinx._commandLog.command('reply', {
                         author: message.author.tag,
                         channel: message.channel ?
@@ -70,10 +71,16 @@ const wikipedia = {
                             message.guild.name :
                             null
                     });
+                    resolve(newMessage);
                 });
+            }).catch(error => {
+                reject(_Error({
+                    error,
+                    message: 'Wiki command error'
+                }));
             });
         }));
-    }
+    })
 };
 
 export default wikipedia;

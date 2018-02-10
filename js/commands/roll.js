@@ -1,10 +1,27 @@
+/**
+The roll command.
+Rolls the specified dice query via the `roll` npm module.
+
+@module commands/roll
+*/
 import _Error from 'isotropic-error';
 import Roll from 'roll';
 
-const roll = new Roll(),
+const roll = new Roll(), // A Roll instance
     rollDice = {
+        /**
+        @property {String} description
+        */
         description: 'rolls dice for games and amusement',
-        process: (jinx, message, query) => {
+
+        /**
+        @method process
+        @arg {Jinx} jinx
+        @arg {Discord.Message} message
+        @arg {String} query
+        @returns {Promise<Discord.Message>}
+        */
+        process: (jinx, message, query) => new Promise((resolve, reject) => {
             const author = message.author.tag,
                 channel = message.channel ?
                     message.channel.name :
@@ -14,6 +31,14 @@ const roll = new Roll(),
                     message.guild.name :
                     null,
 
+                /**
+                @function reduceToString
+                @protected
+                @arg {String} str
+                @arg {Array|String} result
+                @arg {Number} index
+                @returns {String}
+                */
                 reduceToString = (str, result, index) => {
                     if (Array.isArray(result)) {
                         str += `${index === 0 ?
@@ -27,15 +52,14 @@ const roll = new Roll(),
 
                     return str;
                 },
-                logError = error => {
-                    jinx._commandLog.command('error', {
-                        author,
-                        channel,
-                        command,
-                        error,
-                        server
-                    });
-                },
+
+                /**
+                Log a reply to the command log.
+
+                @function logReply
+                @protected
+                @arg {Object} details
+                */
                 logReply = details => {
                     jinx._commandLog.command('reply', {
                         author,
@@ -49,51 +73,56 @@ const roll = new Roll(),
 
             let dice = null;
 
-            if (!query) {
-                return message.channel.send('usage: !roll expression, e.g. _!roll 2d6_').then(() => {
+            if (!query) { // If the query is missing, print usage information
+                message.channel.send('usage: !roll expression, e.g. _!roll 2d6_').then(newMessage => {
                     logReply({
                         message: 'No query found, sending usage help message',
                         query: null
                     });
+                    resolve(newMessage);
                 }).catch(error => {
-                    logError(_Error({
+                    reject(_Error({
                         error,
                         message: 'roll-dice message send error'
                     }));
                 });
+                return;
             }
 
-            if (!roll.validate(query)) {
-                return message.channel.send(`_${query}_ is not a valid die roll, <@${message.author.id}>.`).then(() => {
+            if (!roll.validate(query)) { // Invalid roll query
+                message.channel.send(`_${query}_ is not a valid die roll, <@${message.author.id}>.`).then(newMessage => {
                     logReply({
                         message: 'No valid die roll found',
                         query: null
                     });
+                    resolve(newMessage);
                 }).catch(error => {
-                    logError(_Error({
+                    reject(_Error({
                         error,
                         message: 'roll-dice message send error'
                     }));
                 });
+                return;
             }
 
-            dice = roll.roll(query);
+            dice = roll.roll(query); // Perform the dice roll
 
-            return message.channel.send(`<@${message.author.id}>: You rolled ${dice.result}${dice.rolled.length === 1 ?
+            message.channel.send(`<@${message.author.id}>: You rolled ${dice.result}${dice.rolled.length === 1 ?
                 '.' :
-                ` (${dice.rolled.reduce(reduceToString, '')})`}`).then(() => {
+                ` (${dice.rolled.reduce(reduceToString, '')})`}`).then(newMessage => {
                 logReply({
                     query,
                     result: dice.result,
                     rolled: dice.rolled
                 });
+                resolve(newMessage);
             }).catch(error => {
-                logError(_Error({
+                reject(_Error({
                     error,
                     message: 'roll-dice message send error'
                 }));
             });
-        }
+        })
     };
 
 export default rollDice;

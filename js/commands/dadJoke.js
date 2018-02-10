@@ -1,31 +1,48 @@
-import icanhazdadjokes, {
-    args
-} from '../api/icanhazdadjokes';
+/**
+The dadJoke command.
+Retrieves a random joke from icanhazdadjoke.com and displays it in the
+channel where the command was invoked.
 
+@module commands/dadJoke
+*/
 import _Error from 'isotropic-error';
-import clone from '../util/clone';
 import Discord from 'discord.js';
-import presage from 'presage';
+import icanhazdadjokes from '../api/icanhazdadjokes';
+import promisifyClient from '../util/promisifyClient';
 
-const promisify = (client, method, parameters = {}) => {
-        const {
-            callbackFunction,
-            promise
-        } = presage.promiseWithCallback();
+/**
+Wrap the `joke` method of the icanhazdadjoke API in a Promise
 
-        client.methods[method](clone(args, {
-            parameters
-        }), response => {
-            callbackFunction(null, response);
-        });
+@function getRandomJoke
+@private
+@arg {Client} client A node-restclient instance
+@returns {Promise<Object>}
+*/
+const getRandomJoke = client => promisifyClient(client, 'joke'),
+    /**
+    Pass `getRandomJoke` an instantiated node-rest-client configured for
+    use with icanhazdadjoke.com.
 
-        return promise;
-    },
-    getRandomJoke = client => promisify(client, 'joke'),
+    @function getJoke
+    @private
+    @returns {Promise<Object>}
+    */
     getJoke = () => getRandomJoke(icanhazdadjokes);
 
 export default {
+    /**
+    @property {String} description
+    */
     description: 'displays a random dad joke from icanhazdadjoke.com',
+
+    /**
+    The core logic of the `joke` command.
+
+    @method process
+    @arg {Jinx} jinx
+    @arg {Discord.Message} message
+    @returns {Promise<Discord.Message>}
+    */
     process: (jinx, message) => new Promise((resolve, reject) => {
         const author = message.author.tag,
             channel = message.channel ?
@@ -36,6 +53,13 @@ export default {
                 message.guild.name :
                 null,
 
+            /**
+            Log an error to the command log.
+
+            @function logError
+            @protected
+            @arg {Error|isotropic-error} error
+            */
             logError = error => {
                 jinx._commandLog.command('error', {
                     author,
@@ -45,6 +69,13 @@ export default {
                     server
                 });
             },
+            /**
+            Log a reply to the command log.
+
+            @function logReply
+            @protected
+            @arg {Object} details
+            */
             logReply = details => {
                 jinx._commandLog.command('reply', {
                     author,
@@ -56,17 +87,18 @@ export default {
                 });
             };
 
+        // Perform the remote API call and handle the result or error...
         getJoke().then(result => {
-            if (!result.joke) {
+            if (!result.joke) { // The joke is missing!
                 jinx._log.warn('No joke found in random joke response');
-                message.channel.send('I\'m not feeling very funny right now. Sorry!').then(() => {
+                message.channel.send('I\'m not feeling very funny right now. Sorry!').then(newMessage => {
                     logError(_Error({
                         details: {
                             result
                         },
-                        message: 'No joke found in API response'
+                        message: newMessage.content
                     }));
-                    resolve();
+                    resolve(newMessage);
                 }).catch(error => {
                     reject(_Error({
                         error,
@@ -76,17 +108,18 @@ export default {
                 return;
             }
 
+            // Build a Discord RichEmbed response.
             const embed = new Discord.RichEmbed()
                 .setDescription(result.joke)
                 .setFooter('Jokes provided by icanhazdadjoke.com');
 
             message.channel.send({
                 embed
-            }).then(() => {
+            }).then(newMessage => {
                 logReply({
                     joke: result.joke
                 });
-                resolve();
+                resolve(newMessage);
             }).catch(error => {
                 reject(_Error({
                     error,
@@ -96,5 +129,3 @@ export default {
         });
     })
 };
-
-// https://icanhazdadjoke.com/static/smile.svg
