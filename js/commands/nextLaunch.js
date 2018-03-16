@@ -8,6 +8,7 @@ invoked.
 */
 
 import _Error from 'isotropic-error';
+import arrayExistsAndHasLength from '../util/arrayExistsAndHasLength';
 import countdown from 'countdown';
 import Discord from 'discord.js';
 import launchLib from '../api/launchlibrary';
@@ -165,15 +166,33 @@ export default {
                 embed.setTitle(nextLaunch.name)
                     .setAuthor('Next Scheduled Rocket Launch', jinx._client.user.avatarURL)
                     .setColor(0x00AE86).setThumbnail(nextLaunch.rocket.imageURL)
-                    .setURL(nextLaunch.vidURLs[0])
-                    .addField('Mission', `${nextLaunch.missions[0].name}`)
+                    .setFooter('Data provided by launchlibrary.net')
                     .addField('Launch Vehicle', nextLaunch.rocket.name)
                     .addField('When?', `${timeToLaunch(windowOpens)}\n${windowOpens}`)
-                    .addField('Where?', nextLaunch.location.pads[0].name)
-                    .setFooter('Data provided by launchlibrary.net')
-                    .setDescription(nextLaunch.missions[0].description ?
+                    .setFooter('Data provided by launchlibrary.net');
+
+                /*
+                Some of the API response properties are optional or of
+                variable length. These conditionals safeguard against
+                the flawed assumption that these properties will always
+                be present and prevent unnecessary error conditions.
+                */
+                if (arrayExistsAndHasLength(nextLaunch.missions)) {
+                    embed.addField('Mission', `${nextLaunch.missions[0].name}`);
+                    embed.setDescription(nextLaunch.missions[0].description ?
                         nextLaunch.missions[0].description :
                         '');
+                }
+
+                if (arrayExistsAndHasLength(nextLaunch.vidURLs)) {
+                    embed.setURL(nextLaunch.vidURLs[0]);
+                }
+
+                if (nextLaunch.location && arrayExistsAndHasLength(nextLaunch.location.pads)) {
+                    embed.addField('Where?', nextLaunch.location.pads[0].name);
+                } else {
+                    embed.addField('Where?', 'Launch site unknown');
+                }
 
                 // Send the reply
                 message.channel.send({
