@@ -15,7 +15,7 @@
     "babel-runtime": "^6.26.0",
     "bunyan": "^1.8.12",
     "countdown": "^2.6.0",
-    "discord.js": "^11.3.0",
+    "discord.js": "^11.3.2",
     "isotropic-error": "^0.6.0",
     "isotropic-make": "^0.6.0",
     "node-opus": "^0.2.7",
@@ -81,5 +81,5 @@
     "start": "node lib/index.js | bunyan -L",
     "test": "babel-node ./node_modules/.bin/babel-istanbul test _mocha"
   },
-  "version": "0.2.1"
+  "version": "0.2.2"
 }

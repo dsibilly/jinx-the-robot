@@ -106,7 +106,18 @@ const _CommandLogger = make({
             db = r.db(rethinkDbConfiguration.database),
             commandLogTable = db.table('commandLog');
 
+        me._log = config.logger ?
+            config.logger.child({
+                submodule: 'commandLog'
+            }) :
+            Bunyan.createLogger({
+                name: 'jinx-command-log'
+            });
+
+        me._log.info('Connecting to RethinkDB...');
         r.connect(rethinkDbConfiguration.host).then(connection => {
+            me._log.info('Connection successful');
+
             me._rethinkDbConnection = connection;
             me._rethinkDbConfiguration = rethinkDbConfiguration;
             me._id = config.id;
@@ -138,13 +149,6 @@ const _CommandLogger = make({
         me._beginTime = beginTime;
         me._commandLogTable = commandLogTable;
         me._earlyCommands = [];
-        me._log = config.logger ?
-            config.logger.child({
-                submodule: 'commandLog'
-            }) :
-            Bunyan.createLogger({
-                name: 'jinx-command-log'
-            });
         me._pid = config.pid || process.pid;
 
         return me;
