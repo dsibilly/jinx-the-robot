@@ -1,3 +1,9 @@
+/**
+A node-rest-client wrapper around the launchlibrary.net API
+
+@module api/launchlibrary
+*/
+
 import {
     Client
 } from 'node-rest-client';
@@ -12,6 +18,7 @@ const args = {
     },
     client = new Client();
 
+// TODO: Upgrade to launchlibrary v1.3 API
 client.registerMethod('agency', 'https://launchlibrary.net/1.2/agency', 'GET');
 client.registerMethod('agencyType', 'https://launchlibrary.net/1.2/agencytype', 'GET');
 client.registerMethod('eventType', 'https://launchlibrary.net/1.2/eventtype', 'GET');

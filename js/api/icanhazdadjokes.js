@@ -1,3 +1,8 @@
+/**
+A node-rest-client wrapper around the icanhazdadjoke.com JSON API
+
+@module api/icanhazdadjoke
+*/
 import {
     Client
 } from 'node-rest-client';

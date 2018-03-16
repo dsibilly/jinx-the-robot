@@ -1,3 +1,38 @@
+/**
+The core Jinx bot logic.
+
+This app uses the isotropic utilities library, specifically
+isotropic-make and isotropic-error.
+
+isotropic-make is a replacement for
+ES6 classes that provides a factory for creating object factories. This
+permits me to rigorously define both instance methods and static
+class properties in an easy-to-read and maintainable way.
+
+isotropic-error is a wrapper around the native JavaScript Error that
+allows for sanely nesting errors and getting readable stack traces that
+lead all the way down to where the innermost Error occurred. To the rest
+of the JavaScript runtime it looks, smells and tastes like an Error, but
+it has some added sugar that makes debugging and audit logging less
+frustrating.
+
+@module jinx
+*/
+
+/**
+ * Represents a member of a guild on Discord.
+ * @typedef {Object} GuildMember
+ * @property {Guild} guild The guild/server that this member is a part of
+ * @property {User} user The user that this GuildMember instance represents
+ */
+
+/**
+ * Represents a message on Discord.
+ * @typedef {Object} Message
+ * @property {User} author The author of the message
+ * @property {TextChannel|DMChannel|GroupDMChannel} channel The channel that the message was sent in
+ */
+
 import _CommandLogger from './util/CommandLog';
 import _Error from 'isotropic-error';
 import avatar from './commands/avatar';
@@ -14,11 +49,54 @@ import roll from './commands/roll';
 import uuid from 'uuid/v4';
 import wiki from './commands/wikipedia';
 
+/**
+@class Jinx
+@constructor
+@param {Object} config The configuration object
+@param {Object} [config.api = {}] Config settings for HTTP User Agent
+@param {String} config.commandPrefix The command prefix for Jinx commands
+@param {Object} [config.discord = {}] Discord API config settings
+@param {Object} [config.rethinkdb = {}] RethinkDB config settings
+*/
 const Jinx = make({
+    /**
+    Announce a new user to the guild/server
+
+    @method announce
+    @chainable
+    @arg {GuildMember} member A Discord Member object representing a new server/guild member
+    @returns {Jinx} This Jinx instance
+    */
+    announce (member) {
+        // TODO: Refactor this to update the command log only if the welcome message is successful
+        // TODO: Handle message send errors
+        // Record this welcome to the command log...
+        this._commandLog('welcome', {
+            member: member.user.tag
+        });
+        // ...and greet the new member
+        member.guild.defaultChannel.send(`**<@${member.user.id}> has joined the server...**`);
+
+        return this;
+    },
+
+    /**
+    Destroy this Jinx instance
+
+    @method destroy
+    @chainable
+    @returns {Jinx} This instance
+    @protected
+    */
     destroy () {
         const me = this;
 
+        // Defer destruction until initialization is complete...
         if (me._initializing) {
+            /**
+            @property {Boolean} _destroy
+            @protected
+            */
             me._destroy = true;
             return;
         }
@@ -36,8 +114,18 @@ const Jinx = make({
         delete me._sessionId;
         delete me._token;
         delete me._version;
+
+        return me;
     },
 
+    /**
+    Detect commands and dispatch them to the appropriate handler logic.
+
+    @method dispatch
+    @chainable
+    @arg {Message} message A Discord message
+    @returns {Jinx} This Jinx instance
+    */
     dispatch (message) {
         const author = message.author,
             channel = message.channel ?
@@ -55,6 +143,8 @@ const Jinx = make({
             commandText = null,
             payload = null;
 
+        // Only respond to messages from users other than Jinx itself,
+        // and only if the command prefix is used.
         if (message.author.id !== jinxUser.id && message.content.startsWith(me._commandPrefix)) {
             me._log.info({
                 author: author.tag,
@@ -64,6 +154,7 @@ const Jinx = make({
             commandText = messageContent.split(' ')[0].substring(me._commandPrefix.length);
             payload = messageContent.substring(commandText.length + me._commandPrefix.length + 1);
 
+            // TODO: Refactor this logic so Jinx actually detects when it's being tagged
             if (message.isMentioned(jinxUser)) {
                 try {
                     commandText = messageContent.split(' ')[1];
@@ -74,16 +165,21 @@ const Jinx = make({
                 }
             }
 
+            // If the command detected is an alias, dealias it.
             alias = Jinx.aliases[commandText];
 
             if (alias) {
                 commandText = alias;
             }
 
+            // Load command definition from static command list
             command = Jinx.commands[commandText];
 
+            // Handle help. Maybe this should get it's own module?
             if (commandText === 'help') {
                 if (payload) {
+                    // Attempt to display help on a requested command.
+                    // TODO: This is very similar to the non-payload version. We can abstract this.
                     message.channel.send(payload.split(' ').filter(cmd => Jinx.commands[cmd]).reduce((info, helpCommand) => {
                         const selectedCommand = Jinx.commands[helpCommand],
                             description = selectedCommand.description instanceof Function ?
@@ -105,6 +201,7 @@ const Jinx = make({
                         return info;
                     }, ''));
                 } else {
+                    // Whisper the user with a general overview of all commands.
                     message.author.send(Object.keys(Jinx.commands).sort().reduce((info, helpCommand) => {
                         const selectedCommand = Jinx.commands[helpCommand],
                             description = selectedCommand.description instanceof Function ?
@@ -127,6 +224,7 @@ const Jinx = make({
                     }, '**Available Commands:**\n\n'));
                 }
             } else if (command) {
+                // Save the command to the command log.
                 me._commandLog.command(commandText, {
                     author: author.tag,
                     channel,
@@ -135,8 +233,11 @@ const Jinx = make({
                     server
                 });
 
+                // Process the command's unique logic.
                 command.process(me, message, payload).catch(error => {
+                    // Print any error to the channel...
                     message.channel.send(`**Jinx Command Error**: ${commandText} failed!\nStack:\n${error.stack}`).then(() => {
+                        // If the send is successful, log this error to the command log...
                         me._commandLog.command('error', {
                             author: author.tag,
                             channel,
@@ -148,8 +249,10 @@ const Jinx = make({
                             payload,
                             server
                         });
+                        // ...and log it to the console.
                         me._log.error(error, 'Jinx command error');
                     }).catch(error => {
+                        // If we can't send the error message to the channel we have bigger problems and should log them.
                         me._commandLog.command('error', {
                             author: author.tag,
                             channel,
@@ -169,20 +272,21 @@ const Jinx = make({
         return me;
     },
 
-    welcome (member) {
-        this._commandLog('welcome', {
-            member: member.user.tag
-        });
-        member.guild.defaultChannel.send(`**<@${member.user.id}> has joined the server...**`);
+    /**
+    Constructor method.
 
-        return this;
-    },
-
+    @method _init
+    @chainable
+    @arg {Object} config A configuration Object
+    @protected
+    @returns {Jinx} A new Jinx instance
+    */
     _init (config) {
         const me = this;
 
-        me._initializing = true;
+        me._initializing = true; // Set a flag while we're setting up.
 
+        // Store useful data and functions as protected properties
         me._commandPrefix = config.commandPrefix;
         me._hostname = os.hostname;
         me._pid = process.pid;
@@ -197,6 +301,7 @@ const Jinx = make({
         me._log.info('Starting Jinx Discord Bot...');
 
         me._client.on('ready', () => {
+            // Create the command logger
             me._commandLog = _CommandLogger({
                 beginTime: new Date(),
                 hostname: me._hostname,
@@ -205,25 +310,31 @@ const Jinx = make({
                 rethinkDbConfiguration: config.rethinkdb
             });
 
+            // If we reach this event callback, we're done setting up.
             me._initializing = false;
 
+            // Tell the console we're ready
             me._log.info({
                 version: `v${me._version}`
             }, 'Jinx Discord bot online!');
 
+            // If destroy() got called while we were setting up, perform the deferred destruction now.
             if (me._destroy) {
                 me.destroy();
             }
         });
 
+        // Every message Jinx hears gets handled by the dispatch() method
         me._client.on('message', message => {
             me.dispatch(message);
         });
 
+        // Every new server/guild member gets a welcome message.
         me._client.on('guildMemberAdd', member => {
-            me.welcome(member);
+            me.announce(member);
         });
 
+        // Attempt to login to the Discord API with our token
         me._client.login(me._token).catch(error => {
             me._log.error(_Error({
                 error,
@@ -234,7 +345,15 @@ const Jinx = make({
         return me;
     }
 
-}, {
+},
+/**
+Jinx static properties and methods.
+@static
+
+@property {Object} aliases Jinx command aliases
+@property {Object} commands The formal definitions of Jinx commands
+*/
+{
     aliases: {
         dadjoke: 'dadJoke',
         goodbot: 'goodBot',
