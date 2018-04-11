@@ -89,6 +89,8 @@ const roll = new Roll(), // A Roll instance
                 return;
             }
 
+            query = query.replace(/\s/g, ''); // Strip all spaces from the query
+
             if (!roll.validate(query)) { // Invalid roll query
                 message.channel.send(`_${query}_ is not a valid die roll, <@${message.author.id}>.`).then(newMessage => {
                     logReply({

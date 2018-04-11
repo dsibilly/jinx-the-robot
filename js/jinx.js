@@ -71,7 +71,7 @@ const Jinx = make({
         // TODO: Refactor this to update the command log only if the welcome message is successful
         // TODO: Handle message send errors
         // Record this welcome to the command log...
-        this._commandLog('welcome', {
+        this._commandLog.command('welcome', {
             member: member.user.tag
         });
         // ...and greet the new member
