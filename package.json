@@ -12,6 +12,7 @@
     "sourceMaps": "inline"
   },
   "dependencies": {
+    "@dsibilly/dice-tower": "^1.0.0",
     "babel-runtime": "^6.26.0",
     "bunyan": "^1.8.12",
     "countdown": "^2.6.0",
@@ -24,7 +25,6 @@
     "pad-start": "^1.0.2",
     "presage": "^0.1.4",
     "rethinkdb": "^2.3.3",
-    "roll": "^1.2.0",
     "sodium": "^2.0.3",
     "uuid": "^3.2.1",
     "uws": "^9.14.0",
@@ -66,7 +66,7 @@
     "root": true
   },
   "license": "ISC",
-  "main": "index.js",
+  "main": "lib/index.js",
   "name": "jinx-the-robot",
   "scripts": {
     "build": "BABEL_ENV=build babel js -d lib",
@@ -81,5 +81,5 @@
     "start": "node lib/index.js | bunyan -L",
     "test": "babel-node ./node_modules/.bin/babel-istanbul test _mocha"
   },
-  "version": "0.2.3"
+  "version": "0.2.4"
 }

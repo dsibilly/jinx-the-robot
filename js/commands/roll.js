@@ -5,9 +5,9 @@ Rolls the specified dice query via the `roll` npm module.
 @module commands/roll
 */
 import _Error from 'isotropic-error';
-import Roll from 'roll';
+import DiceTower from '@dsibilly/dice-tower';
 
-const roll = new Roll(), // A Roll instance
+const diceTower = new DiceTower(), // A Roll instance
     rollDice = {
         /**
         @property {String} description
@@ -27,6 +27,7 @@ const roll = new Roll(), // A Roll instance
                     message.channel.name :
                     null,
                 command = 'roll',
+                originalQuery = query,
                 server = message.guild ?
                     message.guild.name :
                     null,
@@ -91,8 +92,8 @@ const roll = new Roll(), // A Roll instance
 
             query = query.replace(/\s/g, ''); // Strip all spaces from the query
 
-            if (!roll.validate(query)) { // Invalid roll query
-                message.channel.send(`_${query}_ is not a valid die roll, <@${message.author.id}>.`).then(newMessage => {
+            if (!DiceTower.validate(query)) { // Invalid roll query
+                message.channel.send(`_${originalQuery}_ is not a valid die roll, <@${message.author.id}>.`).then(newMessage => {
                     logReply({
                         message: 'No valid die roll found',
                         query: null
@@ -107,7 +108,7 @@ const roll = new Roll(), // A Roll instance
                 return;
             }
 
-            dice = roll.roll(query); // Perform the dice roll
+            dice = diceTower.roll(query); // Perform the dice roll
 
             message.channel.send(`<@${message.author.id}>: You rolled ${dice.result}${dice.rolled.length === 1 ?
                 '.' :
