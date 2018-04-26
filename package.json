@@ -24,12 +24,12 @@
     "opusscript": "0.0.6",
     "pad-start": "^1.0.2",
     "parse-duration": "^0.1.1",
-    "presage": "^0.1.4",
+    "presage": "^0.1.5",
     "rethinkdb": "^2.3.3",
     "sodium": "^2.0.3",
     "uuid": "^3.2.1",
-    "uws": "^9.14.0",
-    "wikijs": "^4.5.1"
+    "uws": "^9.148.0",
+    "wikijs": "^4.7.0"
   },
   "description": "",
   "devDependencies": {
@@ -40,11 +40,11 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
-    "depcheck": "^0.6.8",
-    "eslint": "^4.17.0",
-    "eslint-config-isotropic": "^0.5.0",
-    "mocha": "^4.1.0",
-    "nsp": "^3.1.0",
+    "depcheck": "^0.6.9",
+    "eslint": "^4.19.1",
+    "eslint-plugin-isotropic": "^0.1.0",
+    "mocha": "^5.1.0",
+    "nsp": "^3.2.1",
     "pre-commit": "^1.2.2"
   },
   "eslintConfig": {
@@ -53,7 +53,7 @@
       "mocha": true,
       "node": true
     },
-    "extends": "isotropic",
+    "extends": "plugin:isotropic/isotropic",
     "parserOptions": {
       "ecmaFeatures": {
         "experimentalObjectRestSpread": true,
@@ -64,6 +64,9 @@
       "ecmaVersion": 2017,
       "sourceType": "module"
     },
+    "plugins": [
+        "isotropic"
+    ],
     "root": true
   },
   "license": "ISC",
