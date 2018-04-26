@@ -138,13 +138,14 @@ export default {
         getLaunches(1).then(launches => {
             const embed = new Discord.RichEmbed(),
                 nextLaunch = launches[0];
+
             let windowOpens;
 
             if (!launches.length) { // No launches found
                 message.channel.send('There are no upcoming launches with firm launch dates. Check back later!').then(newMessage => {
                     logReply({
-                        noMissionFound: true,
-                        message: newMessage.content
+                        message: newMessage.content,
+                        noMissionFound: true
                     });
                     resolve(newMessage);
                 });
