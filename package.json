@@ -23,6 +23,7 @@
     "node-rest-client": "^3.1.0",
     "opusscript": "0.0.6",
     "pad-start": "^1.0.2",
+    "parse-duration": "^0.1.1",
     "presage": "^0.1.4",
     "rethinkdb": "^2.3.3",
     "sodium": "^2.0.3",
