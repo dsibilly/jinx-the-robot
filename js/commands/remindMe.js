@@ -36,10 +36,8 @@ const remindMe = {
                 });
             },
 
-            [
-                delayString,
-                reminder
-            ] = payload.split(' '),
+            delayString = payload.split(' ')[0],
+            reminder = payload.split(' ').slice(1).join(' '),
             delayMillis = parseDuration(delayString);
 
         if (!reminder || reminder.length === 0) {
