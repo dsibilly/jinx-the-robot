@@ -45,6 +45,7 @@ import nextLaunch from './commands/nextLaunch';
 import os from 'os';
 import packageInfo from '../package.json';
 import ping from './commands/ping';
+import remindMe from './commands/remindMe';
 import roll from './commands/roll';
 import uuid from 'uuid/v4';
 import wiki from './commands/wikipedia';
@@ -359,7 +360,9 @@ Jinx static properties and methods.
         goodbot: 'goodBot',
         jk: 'dadJoke',
         joke: 'dadJoke',
-        nl: 'nextLaunch'
+        nl: 'nextLaunch',
+        remind: 'remindMe',
+        remindme: 'remindMe'
     },
     commands: {
         avatar,
@@ -367,6 +370,7 @@ Jinx static properties and methods.
         goodBot,
         nextLaunch,
         ping,
+        remindMe,
         roll,
         wiki
     }
