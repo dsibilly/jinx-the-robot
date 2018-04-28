@@ -81,7 +81,7 @@ export default {
     /**
     @property {String} description
     */
-    description: 'displays information about the next upcoming rocket launch from launchlibrary.net',
+    description: 'displays information about the next upcoming rocket launch. Powered by launchlibrary.net.',
 
     /**
     @method process

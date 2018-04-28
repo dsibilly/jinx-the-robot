@@ -35,20 +35,13 @@ frustrating.
 
 import _CommandLogger from './util/CommandLog';
 import _Error from 'isotropic-error';
-import avatar from './commands/avatar';
 import Bunyan from 'bunyan';
-import dadJoke from './commands/dadJoke';
+import commandsAndAliases from './commands';
 import Discord from 'discord.js';
-import goodBot from './commands/goodBot';
 import make from 'isotropic-make';
-import nextLaunch from './commands/nextLaunch';
 import os from 'os';
 import packageInfo from '../package.json';
-import ping from './commands/ping';
-import remindMe from './commands/remindMe';
-import roll from './commands/roll';
 import uuid from 'uuid/v4';
-import wiki from './commands/wikipedia';
 
 /**
 @class Jinx
@@ -147,11 +140,6 @@ const Jinx = make({
         // Only respond to messages from users other than Jinx itself,
         // and only if the command prefix is used.
         if (message.author.id !== jinxUser.id && message.content.startsWith(me._commandPrefix)) {
-            me._log.info({
-                author: author.tag,
-                messageContent
-            }, 'Processing command');
-
             commandText = messageContent.split(' ')[0].substring(me._commandPrefix.length);
             payload = messageContent.substring(commandText.length + me._commandPrefix.length + 1);
 
@@ -176,55 +164,7 @@ const Jinx = make({
             // Load command definition from static command list
             command = Jinx.commands[commandText];
 
-            // Handle help. Maybe this should get it's own module?
-            if (commandText === 'help') {
-                if (payload) {
-                    // Attempt to display help on a requested command.
-                    // TODO: This is very similar to the non-payload version. We can abstract this.
-                    message.channel.send(payload.split(' ').filter(cmd => Jinx.commands[cmd]).reduce((info, helpCommand) => {
-                        const selectedCommand = Jinx.commands[helpCommand],
-                            description = selectedCommand.description instanceof Function ?
-                                selectedCommand.description() :
-                                selectedCommand.description,
-                            usage = selectedCommand.usage;
-
-                        info += `**${this._commandPrefix}${helpCommand}**`;
-
-                        if (usage) {
-                            info += ` ${usage}`;
-                        }
-
-                        if (description) {
-                            info += `\n\t ${description}`;
-                        }
-
-                        info += '\n';
-                        return info;
-                    }, ''));
-                } else {
-                    // Whisper the user with a general overview of all commands.
-                    message.author.send(Object.keys(Jinx.commands).sort().reduce((info, helpCommand) => {
-                        const selectedCommand = Jinx.commands[helpCommand],
-                            description = selectedCommand.description instanceof Function ?
-                                selectedCommand.description() :
-                                selectedCommand.description,
-                            usage = selectedCommand.usage;
-
-                        info += `**${this._commandPrefix}${helpCommand}**`;
-
-                        if (usage) {
-                            info += ` ${usage}`;
-                        }
-
-                        if (description) {
-                            info += `\n\t ${description}`;
-                        }
-
-                        info += '\n';
-                        return info;
-                    }, '**Available Commands:**\n\n'));
-                }
-            } else if (command) {
+            if (command) {
                 // Save the command to the command log.
                 me._commandLog.command(commandText, {
                     author: author.tag,
@@ -354,26 +294,6 @@ Jinx static properties and methods.
 @property {Object} aliases Jinx command aliases
 @property {Object} commands The formal definitions of Jinx commands
 */
-{
-    aliases: {
-        dadjoke: 'dadJoke',
-        goodbot: 'goodBot',
-        jk: 'dadJoke',
-        joke: 'dadJoke',
-        nl: 'nextLaunch',
-        remind: 'remindMe',
-        remindme: 'remindMe'
-    },
-    commands: {
-        avatar,
-        dadJoke,
-        goodBot,
-        nextLaunch,
-        ping,
-        remindMe,
-        roll,
-        wiki
-    }
-});
+commandsAndAliases);
 
 export default Jinx;

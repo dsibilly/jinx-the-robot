@@ -9,7 +9,7 @@ const Avatar = {
     /**
     @property {String} description
     */
-    description: 'displays the URL of your full-size Discord avatar',
+    description: 'displays the URL of your full-size Discord avatar.',
 
     /**
     @method process
@@ -17,7 +17,7 @@ const Avatar = {
     @arg {Discord.Message} message A Discord message Object
     @returns {Promise<Discord.Message>}
     */
-    process: (jinx, message) => {
+    process: (jinx, message) => new Promise((resolve, reject) => {
         jinx._commandLog.command('reply', {
             author: message.author.tag,
             channel: message.channel ?
@@ -30,8 +30,25 @@ const Avatar = {
                 message.guild.name :
                 null
         });
-        return message.channel.send(message.author.avatarURL);
-    }
+
+        message.channel.send(message.author.avatarURL).then(newMessage => {
+            jinx._commandLog.command('reply', {
+                author: message.author.tag,
+                channel: message.channel ?
+                    message.channel.name :
+                    null,
+                command: 'avatar',
+                details: {
+                    avatarURL: message.author.avatarURL
+                },
+                message: newMessage.content,
+                server: message.guild ?
+                    message.guild.name :
+                    null
+            });
+            resolve(newMessage);
+        }).catch(reject);
+    })
 };
 
 export default Avatar;
