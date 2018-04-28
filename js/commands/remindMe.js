@@ -101,7 +101,9 @@ const remindMe = {
             }, delayMillis);
             resolve(newMessage);
         }).catch(reject);
-    })
+    }),
+
+    usage: '{TIME} {REMINDER_TEXT}'
 };
 
 export default remindMe;

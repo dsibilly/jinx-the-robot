@@ -33,7 +33,7 @@ export default {
     /**
     @property {String} description
     */
-    description: 'displays a random dad joke from icanhazdadjoke.com',
+    description: 'displays a random dad joke. Powered by icanhazdadjoke.com.',
 
     /**
     The core logic of the `joke` command.

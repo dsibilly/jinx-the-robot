@@ -12,7 +12,7 @@ const diceTower = new DiceTower(), // A Roll instance
         /**
         @property {String} description
         */
-        description: 'rolls dice for games and amusement',
+        description: 'rolls dice for games and amusement.',
 
         /**
         @method process
@@ -125,7 +125,9 @@ const diceTower = new DiceTower(), // A Roll instance
                     message: 'roll-dice message send error'
                 }));
             });
-        })
+        }),
+
+        usage: '{DICE_EXPRESSION}'
     };
 
 export default rollDice;

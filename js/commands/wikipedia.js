@@ -12,7 +12,7 @@ const wikipedia = {
     /**
     @property {String} description
     */
-    description: '',
+    description: 'Search Wikipedia: The Free Encyclopedia.',
 
     /**
     Query Wikipedia with a search string.
@@ -80,7 +80,9 @@ const wikipedia = {
                 }));
             });
         }));
-    })
+    }),
+
+    usage: '{SEARCH_TEXT}'
 };
 
 export default wikipedia;
