@@ -4,6 +4,7 @@ import goodBot from './goodBot';
 import help from './help';
 import nextLaunch from './nextLaunch';
 import ping from './ping';
+import radio from './radio';
 import remindMe from './remindMe';
 import roll from './roll';
 import wiki from './wikipedia';
@@ -12,6 +13,7 @@ export default {
     aliases: {
         dadjoke: 'dadJoke',
         goodbot: 'goodBot',
+        hpr: 'radio',
         jk: 'dadJoke',
         joke: 'dadJoke',
         nl: 'nextLaunch',
@@ -25,6 +27,7 @@ export default {
         help,
         nextLaunch,
         ping,
+        radio,
         remindMe,
         roll,
         wiki
