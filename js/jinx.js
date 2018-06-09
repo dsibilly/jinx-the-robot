@@ -50,6 +50,7 @@ import uuid from 'uuid/v4';
 @param {Object} [config.api = {}] Config settings for HTTP User Agent
 @param {String} config.commandPrefix The command prefix for Jinx commands
 @param {Object} [config.discord = {}] Discord API config settings
+@param {Object} [config.radio = {}] Icecast2 API config settings
 @param {Object} [config.rethinkdb = {}] RethinkDB config settings
 */
 const Jinx = make({

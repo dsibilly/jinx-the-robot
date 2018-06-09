@@ -11,6 +11,10 @@ module.exports = {
     discord: {
         token: ''
     },
+    radio: {
+        host: 'live.hammeradio.com'
+        port: 8000
+    },
     rethinkdb: {
         database: '',
         host: '',
