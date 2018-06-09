@@ -19,7 +19,7 @@
     "discord.js": "^11.3.2",
     "isotropic-error": "^0.6.0",
     "isotropic-make": "^0.6.0",
-    "node-opus": "^0.2.7",
+    "node-opus": "^0.2.9",
     "node-rest-client": "^3.1.0",
     "number-to-words": "^1.2.3",
     "opusscript": "0.0.6",
@@ -46,7 +46,7 @@
     "depcheck": "^0.6.9",
     "eslint": "^4.19.1",
     "eslint-plugin-isotropic": "^0.1.0",
-    "mocha": "^5.1.0",
+    "mocha": "^5.2.0",
     "nsp": "^3.2.1",
     "pre-commit": "^1.2.2"
   },
