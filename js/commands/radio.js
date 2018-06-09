@@ -20,7 +20,7 @@ Retrieves Icecast2 server status from the configured server.
 */
 const getRadioServerStatus = () => request({
     headers: {
-        'User-Agent': 'Jinx Discord Bot'
+        'User-Agent': config.api.userAgent
     },
     json: true,
     uri: `http://${config.radio.host}:${config.radio.port}/status-json.xsl`
@@ -71,42 +71,29 @@ export default {
                 serverStatus = response.icestats,
                 stations = [];
 
-            if (!serverStatus.source) {
-                // No stations broadcasting.
-                message.channel.send(`There are no stations currently on the air, <@${message.author.id}>`).then(newMessage => {
-                    logReply({
-                        message: newMessage.content,
-                        noBroadcasts: true
-                    });
-                    resolve(newMessage);
-                }).catch(error => {
-                    reject(_Error({
-                        error,
-                        message: 'radio message send error'
-                    }));
-                });
-                return;
-            }
-
             /*
             Icecast's JSON API is kinda dumb: if there is only one
             station broadcasting, the `source` property on the icestats
             object is a data object, but if there are multiple stations
-            then the `source` property is an array of objects.
+            then the `source` property is an array of objects. If there
+            are no stations, the `source` property isn't even present.
 
             I'm simplifying the logic required to assemble the reply by
             putting all station data into an array in a
             context-sensitive way.
             */
-            if (Array.isArray(serverStatus.source)) {
-                // I love the new array spread syntax... :-)
-                stations.push(...serverStatus.source);
-            } else {
-                stations.push(serverStatus.source);
+            if (serverStatus.source) {
+                if (Array.isArray(serverStatus.source)) {
+                    // I love the new array spread syntax... :-)
+                    stations.push(...serverStatus.source);
+                } else {
+                    stations.push(serverStatus.source);
+                }
             }
 
             embed.setTitle('Hammer Public Radio Network Status')
                 .setColor(0xA80000)
+                .setThumbnail('http://cdn.sibilly.com/hammergaming/hg_logo_web.png')
                 .setFooter('Powered by Icecast2 streaming media server');
 
             // Use the description to show how many stations are live.
