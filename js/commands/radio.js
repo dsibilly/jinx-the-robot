@@ -20,7 +20,7 @@ Retrieves Icecast2 server status from the configured server.
 */
 const getRadioServerStatus = () => request({
     headers: {
-        'User-Agent': 'Jinx Discord Bot'
+        'User-Agent': config.api.userAgent
     },
     json: true,
     uri: `http://${config.radio.host}:${config.radio.port}/status-json.xsl`
