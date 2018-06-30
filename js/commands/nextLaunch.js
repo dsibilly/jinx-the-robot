@@ -169,8 +169,7 @@ export default {
                     .setColor(0x00AE86).setThumbnail(nextLaunch.rocket.imageURL)
                     .setFooter('Data provided by launchlibrary.net')
                     .addField('Launch Vehicle', nextLaunch.rocket.name)
-                    .addField('When?', `${timeToLaunch(windowOpens)}\n${windowOpens}`)
-                    .setFooter('Data provided by launchlibrary.net');
+                    .addField('When?', `${timeToLaunch(windowOpens)}\n${windowOpens}`);
 
                 /*
                 Some of the API response properties are optional or of
