@@ -47,7 +47,6 @@
     "eslint": "^4.19.1",
     "eslint-plugin-isotropic": "^0.1.0",
     "mocha": "^5.2.0",
-    "nsp": "^3.2.1",
     "pre-commit": "^1.2.2"
   },
   "eslintConfig": {
