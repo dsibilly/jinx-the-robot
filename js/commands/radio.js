@@ -114,7 +114,9 @@ export default {
             stations.forEach(source => {
                 embed.addField(`${source.server_name}`, `${source.server_description === 'Unspecified description' ?
                     '' :
-                    `${source.server_description}\n`}${source.listenurl}.m3u`);
+                    `${source.server_description}\n`}${source.title ?
+                    `Now Playing: ${source.title}\n` :
+                    ''}${source.listenurl}.m3u`);
             });
 
             message.channel.send({
