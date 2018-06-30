@@ -93,7 +93,7 @@ export default {
 
             embed.setTitle('Hammer Public Radio Network Status')
                 .setColor(0xA80000)
-                .setThumbnail('http://cdn.sibilly.com/hammergaming/hg_logo_web.png')
+                .setThumbnail('http://cdn.sibilly.com/hammergaming/hg_logo_RADIO.png')
                 .setFooter('Powered by Icecast2 streaming media server');
 
             // Use the description to show how many stations are live.
