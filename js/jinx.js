@@ -63,9 +63,9 @@ const Jinx = make({
     @returns {Jinx} This Jinx instance
     */
     announce (member) {
-        // TODO: Refactor this to update the command log only if the welcome message is successful
-        // TODO: Handle message send errors
-        // Record this welcome to the command log...
+        /* TODO: Refactor this to update the command log only if the welcome message is successful
+           TODO: Handle message send errors
+           Record this welcome to the command log... */
         this._commandLog.command('welcome', {
             member: member.user.tag
         });
@@ -138,8 +138,8 @@ const Jinx = make({
             commandText = null,
             payload = null;
 
-        // Only respond to messages from users other than Jinx itself,
-        // and only if the command prefix is used.
+        /* Only respond to messages from users other than Jinx itself,
+           and only if the command prefix is used. */
         if (message.author.id !== jinxUser.id && message.content.startsWith(me._commandPrefix)) {
             commandText = messageContent.split(' ')[0].substring(me._commandPrefix.length);
             payload = messageContent.substring(commandText.length + me._commandPrefix.length + 1);

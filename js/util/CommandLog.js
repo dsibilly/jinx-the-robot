@@ -9,7 +9,6 @@ database.
 import _Error from 'isotropic-error';
 import Bunyan from 'bunyan';
 import make from 'isotropic-make';
-import r from 'rethinkdb';
 import uuid from 'uuid/v4';
 
 /**
@@ -79,15 +78,9 @@ const _CommandLogger = make({
         @returns {CommandLogger} This CommandLogger instance
         */
     _command (commandObject) {
-        this._commandLogTable.insert(commandObject).run(this._rethinkDbConnection).catch(error => {
-            this._log.error({
-                error: _Error({
-                    details: commandObject,
-                    error,
-                    message: 'Error inserting command'
-                })
-            }, 'Error inserting command');
-        });
+        this._log.info({
+            details: commandObject
+        }, commandObject.command);
 
         return this;
     },
@@ -100,11 +93,9 @@ const _CommandLogger = make({
         */
     _init (config) {
         const beginTime = config.beginTime || new Date(),
-            me = this,
-            rethinkDbConfiguration = config.rethinkDbConfiguration,
+            me = this;
 
-            db = r.db(rethinkDbConfiguration.database),
-            commandLogTable = db.table('commandLog');
+        me._initializing = true;
 
         me._log = config.logger ?
             config.logger.child({
@@ -114,42 +105,14 @@ const _CommandLogger = make({
                 name: 'jinx-command-log'
             });
 
-        me._log.info('Connecting to RethinkDB...');
-        r.connect(rethinkDbConfiguration.host).then(connection => {
-            me._log.info('Connection successful');
-
-            me._rethinkDbConnection = connection;
-            me._rethinkDbConfiguration = rethinkDbConfiguration;
-            me._id = config.id;
-
-            me._earlyCommands.forEach(earlyCommand => {
-                earlyCommand.id = earlyCommand.id || uuid();
-                me._command(earlyCommand);
-            });
-
-            delete me._earlyCommands;
-
-            me._initializing = false;
-
-            if (me._destroy) {
-                me.destroy();
-            }
-        }).catch(error => {
-            me._log.error({
-                error: _Error({
-                    details: rethinkDbConfiguration,
-                    error,
-                    message: 'Error connecting to RethinkDB'
-                })
-            }, 'Error connecting to RethinkDB');
-        });
-
-        me._initializing = true;
-
         me._beginTime = beginTime;
-        me._commandLogTable = commandLogTable;
         me._earlyCommands = [];
         me._pid = config.pid || process.pid;
+        me._initializing = false;
+
+        if (me._destroy) {
+            return me.destroy();
+        }
 
         return me;
     }
