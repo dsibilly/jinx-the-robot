@@ -21,6 +21,7 @@
         "@dsibilly/dice-tower": "~1.2.0",
         "bunyan": "~2.0.2",
         "countdown": "~2.6.0",
+        "debug": "~2.6.9",
         "discord.js": "~11.4.2",
         "isotropic-error": "~0.7.0",
         "isotropic-make": "~0.7.0",
