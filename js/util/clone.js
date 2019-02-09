@@ -11,4 +11,7 @@ objects.
 @arg {Object} newProperties An object of properties to be added to the cloned output object
 @returns {Object} A clone of originalObject with additional properties enumerated in newProperties
 */
-export default (originalObject, newProperties) => Object.assign({}, originalObject, newProperties);
+export default (originalObject, newProperties) => ({
+    ...originalObject,
+    ...newProperties
+});
