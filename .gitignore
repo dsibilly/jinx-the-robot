@@ -3,3 +3,4 @@ Configuration.js
 lib
 coverage
 node_modules
+.nyc_output
