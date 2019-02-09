@@ -14,12 +14,5 @@ module.exports = {
     radio: {
         host: 'live.hammeradio.com'
         port: 8000
-    },
-    rethinkdb: {
-        database: '',
-        host: '',
-        password: '',
-        port: '',
-        user: ''
     }
 };

@@ -1,92 +1,120 @@
 {
-  "author": "Duane Sibilly <duane@sibilly.com>",
-  "babel": {
-    "comments": false,
-    "plugins": [
-      "transform-line",
-      "transform-runtime"
-    ],
-    "presets": [
-      "env"
-    ],
-    "sourceMaps": "inline"
-  },
-  "dependencies": {
-    "@dsibilly/dice-tower": "^1.1.0",
-    "babel-runtime": "^6.26.0",
-    "bunyan": "^1.8.12",
-    "countdown": "^2.6.0",
-    "discord.js": "^11.3.2",
-    "isotropic-error": "^0.6.0",
-    "isotropic-make": "^0.6.0",
-    "node-opus": "^0.2.9",
-    "node-rest-client": "^3.1.0",
-    "number-to-words": "^1.2.3",
-    "opusscript": "0.0.6",
-    "pad-start": "^1.0.2",
-    "parse-duration": "^0.1.1",
-    "presage": "^0.1.5",
-    "request": "^2.87.0",
-    "request-promise-native": "^1.0.5",
-    "rethinkdb": "^2.3.3",
-    "sodium": "^2.0.3",
-    "uuid": "^3.2.1",
-    "uws": "^9.148.0",
-    "wikijs": "^4.7.0"
-  },
-  "description": "",
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-istanbul": "^0.12.2",
-    "babel-plugin-transform-line": "^0.4.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
-    "chai": "^4.1.2",
-    "depcheck": "^0.6.9",
-    "eslint": "^4.19.1",
-    "eslint-plugin-isotropic": "^0.1.0",
-    "mocha": "^5.2.0",
-    "pre-commit": "^1.2.2"
-  },
-  "eslintConfig": {
-    "env": {
-      "es6": true,
-      "mocha": true,
-      "node": true
+    "author": "Duane Sibilly <duane@sibilly.com>",
+    "babel": {
+        "env": {
+            "test": {
+                "plugins": [
+                    "istanbul"
+                ]
+            }
+        },
+        "plugins": [
+            "@babel/plugin-transform-runtime",
+            "transform-line"
+        ],
+        "presets": [
+            "@babel/preset-env"
+        ]
     },
-    "extends": "plugin:isotropic/isotropic",
-    "parserOptions": {
-      "ecmaFeatures": {
-        "experimentalObjectRestSpread": true,
-        "globalReturn": false,
-        "impliedStrict": true,
-        "jsx": false
-      },
-      "ecmaVersion": 2017,
-      "sourceType": "module"
+    "dependencies": {
+        "@babel/runtime": "~7.3.1",
+        "@dsibilly/dice-tower": "~1.2.0",
+        "bunyan": "~2.0.2",
+        "countdown": "~2.6.0",
+        "discord.js": "~11.4.2",
+        "isotropic-error": "~0.7.0",
+        "isotropic-make": "~0.7.0",
+        "node-rest-client": "~3.1.0",
+        "number-to-words": "~1.2.4",
+        "pad-start": "~1.0.2",
+        "parse-duration": "~0.1.1",
+        "presage": "~0.2.0",
+        "request": "~2.88.0",
+        "request-promise-native": "~1.0.5",
+        "uuid": "~3.3.2",
+        "wikijs": "~4.11.1"
     },
-    "plugins": [
-      "isotropic"
-    ],
-    "root": true
-  },
-  "license": "ISC",
-  "main": "lib/index.js",
-  "name": "jinx-the-robot",
-  "private": true,
-  "scripts": {
-    "build": "BABEL_ENV=build babel js -d lib",
-    "coverage": "babel-node ./node_modules/.bin/babel-istanbul cover _mocha --report lcovonly -- -R spec",
-    "lint": "node_modules/.bin/eslint js",
-    "posttest": "[ -z \"$npm_config_coverage\" ] || babel-istanbul check-coverage --branches 80 --functions 100 --lines 100 --statements 100",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run securityCheck && npm test --coverage",
-    "pretest": "npm run lint",
-    "rebuild": "rm -rf ./node_modules && npm install",
-    "securityCheck": "nsp check",
-    "start": "node lib/index.js | bunyan -L",
-    "test": "babel-node ./node_modules/.bin/babel-istanbul test _mocha"
-  },
-  "version": "0.2.14"
+    "description": "",
+    "devDependencies": {
+        "@babel/cli": "~7.2.3",
+        "@babel/core": "~7.2.2",
+        "@babel/node": "~7.2.2",
+        "@babel/plugin-transform-runtime": "~7.2.0",
+        "@babel/preset-env": "~7.3.1",
+        "@babel/register": "~7.0.0",
+        "babel-plugin-istanbul": "~5.1.0",
+        "babel-plugin-transform-line": "~0.5.0",
+        "chai": "~4.2.0",
+        "coveralls": "~3.0.2",
+        "cross-env": "~5.2.0",
+        "depcheck": "~0.7.1",
+        "eslint": "~5.13.0",
+        "eslint-plugin-isotropic": "~0.2.0",
+        "mocha": "~5.2.0",
+        "nyc": "~13.2.0",
+        "pre-commit": "~1.2.2"
+    },
+    "eslintConfig": {
+        "env": {
+            "es6": true,
+            "mocha": true,
+            "node": true
+        },
+        "extends": "plugin:isotropic/isotropic",
+        "parserOptions": {
+            "ecmaFeatures": {
+                "globalReturn": false,
+                "impliedStrict": true,
+                "jsx": false
+            },
+            "ecmaVersion": 2018,
+            "sourceType": "module"
+        },
+        "plugins": [
+            "isotropic"
+        ],
+        "root": true,
+        "rules": {
+            "sort-imports": 0
+        }
+    },
+    "license": "ISC",
+    "main": "lib/index.js",
+    "name": "jinx-the-robot",
+    "nyc": {
+        "all": true,
+        "cache": true,
+        "check-coverage": true,
+        "include": [
+            "js/*.js",
+            "js/*/*.js"
+        ],
+        "lines": 0,
+        "exclude": [
+            "lib/*"
+        ],
+        "instrument": false,
+        "reporter": [
+            "lcov",
+            "text-summary"
+        ],
+        "require": [
+            "@babel/register"
+        ],
+        "sourceMap": false
+    },
+    "private": true,
+    "scripts": {
+        "build": "BABEL_ENV=build babel js -d lib",
+        "coverage": "nyc check-coverage",
+        "lint": "node_modules/.bin/eslint js test",
+        "posttest": "[ -z \"$npm_config_coverage\" ] || nyc check-coverage",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm audit && nyc check-coverage",
+        "pretest": "npm run lint",
+        "rebuild": "rm -rf ./node_modules && rm package-lock.json && npm install",
+        "start": "node lib/index.js | bunyan -L",
+        "test": "cross-env BABEL_ENV=test nyc mocha"
+    },
+    "version": "0.3.0"
 }

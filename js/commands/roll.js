@@ -90,7 +90,7 @@ const diceTower = new DiceTower(), // A Roll instance
                 return;
             }
 
-            query = query.replace(/\s/g, ''); // Strip all spaces from the query
+            query = query.replace(/\s/gu, ''); // Strip all spaces from the query
 
             if (!DiceTower.validate(query)) { // Invalid roll query
                 message.channel.send(`_${originalQuery}_ is not a valid die roll, <@${message.author.id}>.`).then(newMessage => {
