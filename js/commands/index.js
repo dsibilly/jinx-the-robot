@@ -1,3 +1,5 @@
+import atlasChatStart from './atlasChatStart';
+import atlasChatStop from './atlasChatStop';
 import avatar from './avatar';
 import dadJoke from './dadJoke';
 import goodBot from './goodBot';
@@ -21,6 +23,8 @@ export default {
         remindme: 'remindMe'
     },
     commands: {
+        atlasChatStart,
+        atlasChatStop,
         avatar,
         dadJoke,
         goodBot,
