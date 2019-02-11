@@ -35,14 +35,14 @@ const SRC = require('source-rcon-client').default, // SRC
                 const client = new SRC(atlasServer.host, currentPort, atlasServer.password);
 
                 // Connect to the host/port, run the desired command
-                let rconCommand = `serverchat ${message.author.tag}:${message.content}`;
-
-                console.log(rconCommand);
+                let rconCommand = `serverchat ${message.author.tag}:${message.content} \n`;
 
                 client.connect()
-                    .then(() => client.send('rconCommand')) // DUANE: WHERE ARE YOU GETTING discord.message FROM?
+                    .then(console.log(rconCommand))
+                    .then(() => client.send(rconCommand))
                     .then(response => {
                         // Ignore "no response" responses; otherwise process...
+                        console.log(response);
                         if (response !== 'Server received, But no response!! \n ') {
                             console.log('message not sent');
                         }
