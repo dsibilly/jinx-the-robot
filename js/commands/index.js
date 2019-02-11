@@ -1,3 +1,4 @@
+import atlasChatSend from './atlasChatSend';
 import atlasChatStart from './atlasChatStart';
 import atlasChatStop from './atlasChatStop';
 import avatar from './avatar';
@@ -23,6 +24,7 @@ export default {
         remindme: 'remindMe'
     },
     commands: {
+        atlasChatSend,
         atlasChatStart,
         atlasChatStop,
         avatar,

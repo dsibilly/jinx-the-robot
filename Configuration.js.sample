@@ -10,14 +10,15 @@ module.exports = {
     atlas: {
         host: '',
         password: '',
-        ports: []
+        ports: [],
+        admins: {}
     },
     commandPrefix: '!',
     discord: {
         token: ''
     },
     radio: {
-        host: 'live.hammeradio.com'
+        host: 'live.hammeradio.com',
         port: 8000
     }
 };

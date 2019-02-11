@@ -19,7 +19,14 @@ const SRC = require('source-rcon-client').default, // SRC
         @returns {Promise<Discord.Message>}
         */
         process: (jinx, message) => new Promise((resolve, reject) => {
-            // Collect message metadata for reuse by command logging
+            // Check to see if the user is authorized
+            if (atlasServer.admins[Number(message.author.id)]) {
+                message.channel.send(`Sorry, <@${message.author.id}>. Access Denied`);
+                resolve();
+                return;
+            }
+            // Collect message metadata for reuse by command logging;
+
             const author = message.author.tag,
                 channel = message.channel ?
                     message.channel.name :
