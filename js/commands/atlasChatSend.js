@@ -15,13 +15,13 @@ const atlasServer = config.atlas,
         @method process
         @arg {Jinx} jinx
         @arg {Discord.Message} message
+        @arg {String} payload
         @returns {Promise<Discord.Message>}
         */
-        process: (jinx, message) => new Promise((resolve, reject) => {
-            /* Collect message metadata for reuse by command logging
-               DUANE: THE BELOW IS ONLY USEFUL IF YOU'RE GOING TO MAKE COMMAND LOG ENTRIES */
+        process: (jinx, message, payload) => new Promise((resolve, reject) => {
+            // Collect message metadata for reuse by command logging
             const author = message.author.tag,
-                ID = message.author.id,
+                authorId = message.author.id,
                 channel = message.channel ?
                     message.channel.name :
                     null,
@@ -32,18 +32,37 @@ const atlasServer = config.atlas,
 
             atlasServer.ports.forEach(currentPort => {
                 // Create a new client for this host/port combination
-                const client = new SRC(atlasServer.host, currentPort, atlasServer.password);
-
-                // Connect to the host/port, run the desired command
-                let rconCommand = `serverchat ${message.author.tag} :${message.content.slice(4)} \n`;
+                const client = new SRC(atlasServer.host, currentPort, atlasServer.password),
+                    rconCommand = `serverchat ${message.author.tag}: ${message.content.slice(4)}} \n`;
 
                 client.connect()
                     .then(() => client.send(rconCommand))
                     .then(response => {
-                        // Ignore "no response" responses; otherwise process...
                         if (response !== 'Server received, But no response!! \n ') {
-                            console.log('message not sent');
+                            jinx._commandLog.command('atlasChatSendError', {
+                                author,
+                                channel,
+                                command,
+                                details: {
+                                    payload
+                                },
+                                message: message.content,
+                                server
+                            });
+                            return;
                         }
+
+                        // Send was successful
+                        jinx._commandLog.command('atlasChatSendRelay', {
+                            author,
+                            channel,
+                            command,
+                            details: {
+                                payload
+                            },
+                            message: message.content,
+                            server
+                        });
                     }).catch(reject);
             });
 
