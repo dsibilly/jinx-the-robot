@@ -22,6 +22,7 @@ const SRC = require('source-rcon-client').default, // SRC
             /* Collect message metadata for reuse by command logging
                DUANE: THE BELOW IS ONLY USEFUL IF YOU'RE GOING TO MAKE COMMAND LOG ENTRIES */
             const author = message.author.tag,
+                ID = message.author.id,
                 channel = message.channel ?
                     message.channel.name :
                     null,
@@ -35,7 +36,7 @@ const SRC = require('source-rcon-client').default, // SRC
                 const client = new SRC(atlasServer.host, currentPort, atlasServer.password);
 
                 // Connect to the host/port, run the desired command
-                let rconCommand = `serverchat ${message.author.tag} :${message.content.slice(15)} \n`;
+                let rconCommand = `serverchat ${message.author.tag} :${message.content.slice(4)} \n`;
 
                 client.connect()
                     .then(() => client.send(rconCommand))

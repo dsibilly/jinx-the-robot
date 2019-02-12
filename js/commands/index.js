@@ -14,6 +14,7 @@ import wiki from './wikipedia';
 
 export default {
     aliases: {
+        ac: 'atlasChatSend',
         dadjoke: 'dadJoke',
         goodbot: 'goodBot',
         hpr: 'radio',

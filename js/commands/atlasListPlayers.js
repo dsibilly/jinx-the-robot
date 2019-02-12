@@ -19,16 +19,7 @@ const SRC = require('source-rcon-client').default, // SRC
         @returns {Promise<Discord.Message>}
         */
         process: (jinx, message) => new Promise((resolve, reject) => {
-            /* Collect message metadata for reuse by command logging
-               DUANE: THE BELOW IS ONLY USEFUL IF YOU'RE GOING TO MAKE COMMAND LOG ENTRIES */
-            const author = message.author.tag,
-                channel = message.channel ?
-                    message.channel.name :
-                    null,
-                command = 'atlasListPlayers',
-                server = message.guild ?
-                    message.guild.name :
-                    null;
+            const players = [];
 
             atlasServer.ports.forEach(currentPort => {
                 // Create a new client for this host/port combination

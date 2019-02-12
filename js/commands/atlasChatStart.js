@@ -67,7 +67,7 @@ const SRC = require('source-rcon-client').default, // SRC
                                 For each line in the chat response, filter out any empty lines (e.g. '')
                                 to avoid spamming the channel...
                                 */
-                                response.split('\n').filter(chatLine => chatLine.length).forEach(chatLine => {
+                                response.split('\n').filter(chatLine => chatLine.trim().length && !chatLine.startsWith('SERVER:')).forEach(chatLine => {
                                     // ...then send the remaining chat lines to this channel in Discord...
                                     newMessage.channel.send(chatLine).then(() => {
                                         // ...and then log each line for posterity
