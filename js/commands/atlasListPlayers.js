@@ -1,11 +1,13 @@
 /**
 @module commands/atlasListPlayers
 */
+import _Error from 'isotropic-error';
 import config from '../../Configuration';
+import Discord from 'discord.js';
+import presage from 'presage';
+import SRC from 'source-rcon-client';
 
-const SRC = require('source-rcon-client').default, // SRC
-    rconCommand = 'listplayers', // The command to run
-    atlasServer = config.atlas,
+const atlasServer = config.atlas,
     atlasListPlayers = {
         /**
         @property {String} description
@@ -19,27 +21,97 @@ const SRC = require('source-rcon-client').default, // SRC
         @returns {Promise<Discord.Message>}
         */
         process: (jinx, message) => new Promise((resolve, reject) => {
-            const players = [];
+            // Collect message metadata for reuse by command logging;
+            const author = message.author.tag,
+                channel = message.channel ?
+                    message.channel.name :
+                    null,
+                command = 'atlas',
+                rconCommand = 'listplayers',
+                server = message.guild ?
+                    message.guild.name :
+                    null;
 
-            atlasServer.ports.forEach(currentPort => {
-                // Create a new client for this host/port combination
-                const client = new SRC(atlasServer.host, currentPort, atlasServer.password);
+            presage.parallel(atlasServer.ports.reduce((portsMap, port) => {
+                if (!portsMap[port]) {
+                    portsMap[port] = () => new Promise(resolve => {
+                        const client = new SRC(atlasServer.host, port, atlasServer.password),
 
-                // Connect to the host/port, run the desired command
-                let rconCommand = `serverchat ${message.author.tag} :${message.content.slice(15)} \n`;
+                            playerList = [];
 
-                client.connect()
-                    .then(() => client.send(rconCommand))
-                    .then(response => {
-                        // Ignore "no response" responses; otherwise process...
-                        if (response !== 'Server received, But no response!! \n ') {
-                            console.log('message not sent');
-                        }
-                    }).catch(reject);
+                        client.connect().then(() => client.send(rconCommand))
+                            .then(response => Promise.resolve(response.split('\n').map(line => line.trim()).filter(line => line.length && (line !== 'No Players Connected'))))
+                            .then(players => Promise.resolve(players.map(player => player.split(',')[0].split('.').slice(1).join('.').trim())))
+                            .then(players => {
+                                playerList.push(...players);
+
+                                return client.disconnect();
+                            }).then(() => {
+                                resolve(playerList);
+                            }).catch(error => {
+                                jinx._commandLog.command('atlasListPlayersError', {
+                                    author,
+                                    channel,
+                                    command,
+                                    error,
+                                    message: message.content,
+                                    server
+                                });
+                                resolve([]);
+                            });
+                    });
+                }
+
+                return portsMap;
+            }, {})).then(results => {
+                const embed = new Discord.RichEmbed(),
+                    fullPlayerList = Object.keys(results).reduce((fullPlayerList, port) => {
+                        const playerList = results[port];
+
+                        fullPlayerList.push(...playerList);
+
+                        return fullPlayerList;
+                    }, []);
+
+                embed.setTitle('Current Player List')
+                    .setAuthor('Hammer Gaming Atlas Server')
+                    .setColor(0x9AF0FF)
+                    .setThumbnail('http://cdn.sibilly.com/hammergaming/atlas-logo.png')
+                    .setFooter('Powered by source-rcon-client');
+
+                if (fullPlayerList.length) {
+                    embed.addField('# of Players Online', fullPlayerList.length);
+                    embed.setDescription(fullPlayerList.sort().join('\n'));
+                } else {
+                    embed.setDescription('There are no players online');
+                }
+
+                message.channel.send({
+                    embed
+                }).then(newMessage => {
+                    jinx._commandLog.command('reply', {
+                        author,
+                        channel,
+                        command,
+                        details: {
+                            fullPlayerList
+                        },
+                        message: message.content,
+                        server
+                    });
+                    resolve(newMessage);
+                }).catch(error => {
+                    reject(_Error({
+                        error,
+                        message: 'atlasListPlayers message send error'
+                    }));
+                });
+            }).catch(error => {
+                reject(_Error({
+                    error,
+                    message: 'atlasListPlayers RCON error'
+                }));
             });
-
-            // Regardless of what happens, fulfill the Promise so Jinx keeps going.
-            resolve();
         })
     };
 
