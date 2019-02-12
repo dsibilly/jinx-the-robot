@@ -2,9 +2,9 @@
 @module commands/atlasListPlayers
 */
 import config from '../../Configuration';
+import SRC from 'source-rcon-client';
 
-const SRC = require('source-rcon-client').default, // SRC
-    rconCommand = 'listplayers', // The command to run
+const rconCommand = 'listplayers', // The command to run
     atlasServer = config.atlas,
     atlasListPlayers = {
         /**

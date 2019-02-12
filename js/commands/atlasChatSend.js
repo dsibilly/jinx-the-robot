@@ -2,10 +2,9 @@
 @module commands/atlasChatSend
 */
 import config from '../../Configuration';
+import SRC from 'source-rcon-client';
 
-const SRC = require('source-rcon-client').default, // SRC
-    rconCommand = 'chat', // The command to run
-    atlasServer = config.atlas,
+const atlasServer = config.atlas,
     atlasChatSend = {
         /**
         @property {String} description
