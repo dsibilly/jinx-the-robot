@@ -135,7 +135,7 @@ export default {
             };
 
         // Retrieve data on the next launch...
-        getLaunches(1).then(launches => {
+        getLaunches(5).then(launches => {
             const embed = new Discord.RichEmbed(),
                 nextLaunch = launches[0];
 
