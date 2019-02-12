@@ -1,3 +1,6 @@
+import atlasChatSend from './atlasChatSend';
+import atlasChatStart from './atlasChatStart';
+import atlasChatStop from './atlasChatStop';
 import avatar from './avatar';
 import dadJoke from './dadJoke';
 import goodBot from './goodBot';
@@ -11,6 +14,7 @@ import wiki from './wikipedia';
 
 export default {
     aliases: {
+        ac: 'atlasChatSend',
         dadjoke: 'dadJoke',
         goodbot: 'goodBot',
         hpr: 'radio',
@@ -21,6 +25,9 @@ export default {
         remindme: 'remindMe'
     },
     commands: {
+        atlasChatSend,
+        atlasChatStart,
+        atlasChatStop,
         avatar,
         dadJoke,
         goodBot,
