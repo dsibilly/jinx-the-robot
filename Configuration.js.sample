@@ -8,10 +8,11 @@ module.exports = {
         userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) Jinx/0.1.0'
     },
     atlas: {
+        admins: {},
         host: '',
         password: '',
+        poll: 5000,
         ports: [],
-        admins: {}
     },
     commandPrefix: '!',
     discord: {
