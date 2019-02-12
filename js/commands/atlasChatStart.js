@@ -2,6 +2,7 @@
 @module commands/atlasChatStart
 */
 import config from '../../Configuration';
+import presage from 'presage';
 
 const SRC = require('source-rcon-client').default, // SRC
     rconCommand = 'getchat', // The command to run
@@ -55,55 +56,80 @@ const SRC = require('source-rcon-client').default, // SRC
 
                 // Keep doing this while the _atlasGetChat flag is set
                 jinx._atlasGetChat = setInterval(() => {
-                    atlasServer.ports.forEach(currentPort => {
-                        // Create a new client for this host/port combination
-                        const client = new SRC(atlasServer.host, currentPort, atlasServer.password);
+                    if (jinx._atlasGetChatIsRunning) {
+                        return;
+                    }
 
-                        // Connect to the host/port, run the desired command
-                        client.connect().then(() => client.send(rconCommand)).then(response => {
-                            // Ignore "no response" responses; otherwise process...
-                            if (response !== 'Server received, But no response!! \n ') {
-                                /*
-                                For each line in the chat response, filter out any empty lines (e.g. '')
-                                to avoid spamming the channel...
-                                */
-                                response.split('\n').filter(chatLine => chatLine.trim().length && !chatLine.startsWith('SERVER:')).forEach(chatLine => {
-                                    // ...then send the remaining chat lines to this channel in Discord...
-                                    newMessage.channel.send(chatLine).then(() => {
-                                        // ...and then log each line for posterity
-                                        jinx._commandLog.command('atlasPollChatLine', {
-                                            author,
-                                            channel,
-                                            command,
-                                            details: {
-                                                chatLine
-                                            },
-                                            server
+                    jinx._atlasGetChatIsRunning = true; // flag that we're polling
+
+                    presage.parallel(atlasServer.ports.reduce((portsMap, port) => {
+                        if (!portsMap[port]) {
+                            portsMap[port] = () => new Promise((resolve, reject) => {
+                                const client = new SRC(atlasServer.host, port, atlasServer.password);
+
+                                client.connect().then(() => client.send(rconCommand)).then(response => {
+                                    if (response !== 'Server received, But no response!! \n ') {
+                                        response.split('\n').filter(chatLine => chatLine.trim().length && !chatLine.startsWith('SERVER:')).forEach(chatLine => {
+                                            newMessage.channel.send(chatLine).then(() => {
+                                                jinx._commandLog.command('atlasPollChatLine', {
+                                                    author,
+                                                    channel,
+                                                    command,
+                                                    details: {
+                                                        chatLine
+                                                    },
+                                                    server
+                                                });
+                                            }).catch(error => {
+                                                jinx._commandLog.command('messageSendError', {
+                                                    author,
+                                                    channel,
+                                                    command,
+                                                    details: {
+                                                        chatLine
+                                                    },
+                                                    error,
+                                                    server
+                                                });
+                                            });
                                         });
-                                    });
-                                });
-                            }
+                                    }
 
-                            // ...then disconnect from RCON
-                            return client.disconnect();
-                        }).then(() => {
-                            // The disconnect was successful. Log it.
-                            jinx._commandLog.command('atlasPollFinish', {
-                                author,
-                                channel,
-                                command,
-                                server
+                                    return client.disconnect();
+                                }).then(() => {
+                                    resolve('success');
+                                }).catch(error => {
+                                    jinx._commandLog.command('atlasPollError', {
+                                        author,
+                                        channel,
+                                        command,
+                                        error,
+                                        server
+                                    });
+                                    resolve('failure');
+                                });
                             });
-                        }).catch(error => {
-                            // There has been an RCON error. Log it.
-                            jinx._commandLog.command('atlasPollError', {
-                                author,
-                                channel,
-                                command,
-                                error,
-                                server
-                            });
+                        }
+
+                        return portsMap;
+                    }, {})).then(results => {
+                        jinx._commandLog.command('atlasPollFinish', {
+                            author,
+                            channel,
+                            command,
+                            results,
+                            server
                         });
+                        jinx._atlasGetChatIsRunning = false;
+                    }).catch(error => {
+                        jinx._commandLog.command('atlasPollError', {
+                            author,
+                            channel,
+                            command,
+                            error,
+                            server
+                        });
+                        jinx._atlasGetChatIsRunning = false;
                     });
                 }, 5000);
 
