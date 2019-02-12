@@ -131,7 +131,7 @@ const SRC = require('source-rcon-client').default, // SRC
                         });
                         jinx._atlasGetChatIsRunning = false;
                     });
-                }, 5000);
+                }, atlasServer.poll);
 
                 // Regardless of what happens, fulfill the Promise so Jinx keeps going.
                 resolve(newMessage);
