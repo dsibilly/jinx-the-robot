@@ -20,15 +20,9 @@ const rconCommand = 'getchat', // The command to run
         @returns {Promise<Discord.Message>}
         */
         process: (jinx, message) => new Promise((resolve, reject) => {
-            // Check to see if the user is authorized
-            if (atlasServer.admins[Number(message.author.id)]) {
-                message.channel.send(`Sorry, <@${message.author.id}>. Access Denied`);
-                resolve();
-                return;
-            }
-
-            // Collect message metadata for reuse by command logging;
+            // Collect message metadata for reuse by command logging
             const author = message.author.tag,
+                authorId = message.author.id,
                 channel = message.channel ?
                     message.channel.name :
                     null,
@@ -36,6 +30,13 @@ const rconCommand = 'getchat', // The command to run
                 server = message.guild ?
                     message.guild.name :
                     null;
+
+            // Check to see if the user is authorized
+            if (atlasServer.admins[Number(authorId)]) {
+                message.channel.send(`Sorry, <@${authorId}>. Access Denied.`);
+                resolve();
+                return;
+            }
 
             if (jinx._atlasGetChat) {
                 // If the chat poll is already running, do nothing.
