@@ -32,6 +32,7 @@
         "presage": "~0.2.0",
         "request": "~2.88.0",
         "request-promise-native": "~1.0.5",
+        "source-rcon-client": "0.0.2",
         "uuid": "~3.3.2",
         "wikijs": "~4.11.1"
     },
