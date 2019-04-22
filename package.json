@@ -53,7 +53,7 @@
         "eslint": "~5.13.0",
         "eslint-plugin-isotropic": "~0.2.0",
         "mocha": "~5.2.0",
-        "nyc": "~13.2.0",
+        "nyc": "~13.3.0",
         "pre-commit": "~1.2.2"
     },
     "eslintConfig": {
