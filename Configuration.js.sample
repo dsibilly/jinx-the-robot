@@ -7,12 +7,19 @@ module.exports = {
     api: {
         userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) Jinx/0.1.0'
     },
+    atlas: {
+        admins: {},
+        host: '',
+        password: '',
+        poll: 5000,
+        ports: [],
+    },
     commandPrefix: '!',
     discord: {
         token: ''
     },
     radio: {
-        host: 'live.hammeradio.com'
+        host: 'live.hammeradio.com',
         port: 8000
     }
 };
