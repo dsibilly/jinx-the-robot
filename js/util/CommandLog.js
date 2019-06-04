@@ -141,7 +141,6 @@ CommandLog static properties and methods.
             case 'string':
                 // These types need no sanitization
                 return value;
-
             case 'object':
                 if (!value) {
                     // If the object is falsey, it's fine

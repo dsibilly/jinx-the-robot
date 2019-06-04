@@ -101,11 +101,9 @@ export default {
                 case 0:
                     embed.setDescription('There are no HPR stations on-the-air at this time.');
                     break;
-
                 case 1:
                     embed.setDescription('There is one HPR station on-the-air:');
                     break;
-
                 default:
                     embed.setDescription(`There are ${convertNumber.toWords(stations.length)} HPR stations on-the-air:`);
             }
