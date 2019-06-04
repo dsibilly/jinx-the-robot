@@ -118,5 +118,5 @@
         "start": "node lib/index.js | bunyan -L",
         "test": "cross-env BABEL_ENV=test nyc mocha"
     },
-    "version": "0.3.0"
+    "version": "0.4.0"
 }
