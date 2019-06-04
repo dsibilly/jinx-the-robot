@@ -75,7 +75,7 @@ const diceTower = new DiceTower(), // A Roll instance
             let dice = null;
 
             if (!query) { // If the query is missing, print usage information
-                message.channel.send('usage: !roll expression, e.g. _!roll 2d6_').then(newMessage => {
+                message.channel.send(`usage: ${jinx._commandPrefix}roll expression, e.g. _${jinx._commandPrefix}roll 2d6_`).then(newMessage => {
                     logReply({
                         message: 'No query found, sending usage help message',
                         query: null

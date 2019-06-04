@@ -43,7 +43,7 @@ export default {
     @arg {Discord.Message} message
     @returns {Promise<Discord.Message>}
     */
-    process: (jinx, message) => new Promise((resolve, reject) => {
+    async process (jinx, message) {
         const author = message.author.tag,
             channel = message.channel ?
                 message.channel.name :
@@ -52,7 +52,6 @@ export default {
             server = message.guild ?
                 message.guild.name :
                 null,
-
             /**
             Log an error to the command log.
 
@@ -85,47 +84,49 @@ export default {
                     message: message.content,
                     server
                 });
-            };
+            },
 
-        // Perform the remote API call and handle the result or error...
-        getJoke().then(result => {
-            if (!result.joke) { // The joke is missing!
-                jinx._log.warn('No joke found in random joke response');
-                message.channel.send('I\'m not feeling very funny right now. Sorry!').then(newMessage => {
-                    logError(_Error({
-                        details: {
-                            result
-                        },
-                        message: newMessage.content
-                    }));
-                    resolve(newMessage);
-                }).catch(error => {
-                    reject(_Error({
-                        error,
-                        message: 'get-data-jokes message send error'
-                    }));
-                });
-                return;
-            }
+            result = await getJoke();
 
-            // Build a Discord RichEmbed response.
-            const embed = new Discord.RichEmbed()
-                .setDescription(result.joke)
-                .setFooter('Jokes provided by icanhazdadjoke.com');
+        if (!result.joke) {
+            jinx._log.warn('No joke found in random joke response');
+            let newMessage;
 
-            message.channel.send({
-                embed
-            }).then(newMessage => {
-                logReply({
-                    joke: result.joke
-                });
-                resolve(newMessage);
-            }).catch(error => {
-                reject(_Error({
+            try {
+                newMessage = await message.channel.send('I\'m not feeling very funny right now. Sorry!');
+            } catch (error) {
+                throw new _Error({
                     error,
                     message: 'get-data-jokes message send error'
-                }));
+                });
+            }
+
+            logError(_Error({
+                details: {
+                    result
+                },
+                message: newMessage.content
+            }));
+            return newMessage;
+        }
+
+        // Build a Discord RichEmbed response.
+        try {
+            const embed = new Discord.RichEmbed()
+                    .setDescription(result.joke)
+                    .setFooter('Jokes provided by icanhazdadjoke.com'),
+                newMessage = await message.channel.send({
+                    embed
+                });
+
+            logReply({
+                joke: newMessage.content
             });
-        });
-    })
+        } catch (error) {
+            throw new _Error({
+                error,
+                message: 'get-data-jokes message send error'
+            });
+        }
+    }
 };
