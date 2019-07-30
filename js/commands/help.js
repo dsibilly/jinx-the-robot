@@ -1,5 +1,5 @@
 /**
-The remindMe command.
+The help command.
 
 @module commands/help
 */
