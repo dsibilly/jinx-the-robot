@@ -7,7 +7,9 @@ import SRC from 'source-rcon-client';
 
 const rconCommand = 'getchat', // The command to run
     atlasServer = config.atlas, // The ATLAS specific config data
-    atlasChatStart = { // Command logic
+    atlasChatStart = {
+        // Command logic
+
         /**
         @property {String} description
         */
