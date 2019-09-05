@@ -2,6 +2,7 @@
    import atlasChatStart from './atlasChatStart';
    import atlasChatStop from './atlasChatStop';
    import atlasListPlayers from './atlasListPlayers'; */
+import ageTest from './ageTest';
 import avatar from './avatar';
 import dadJoke from './dadJoke';
 import goodBot from './goodBot';
@@ -16,6 +17,8 @@ import wiki from './wikipedia';
 export default {
     aliases: {
         // ac: 'atlasChatSend',
+        agetest: 'ageTest',
+        atest: 'ageTest',
         dadjoke: 'dadJoke',
         goodbot: 'goodBot',
         hpr: 'radio',
@@ -30,6 +33,7 @@ export default {
            atlasChatStart,
            atlasChatStop,
            atlasListPlayers, */
+        ageTest,
         avatar,
         dadJoke,
         goodBot,
