@@ -17,6 +17,7 @@ import wiki from './wikipedia';
 export default {
     aliases: {
         // ac: 'atlasChatSend',
+        agetest: 'ageTest',
         atest: 'ageTest',
         dadjoke: 'dadJoke',
         goodbot: 'goodBot',
