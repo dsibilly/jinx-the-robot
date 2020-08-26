@@ -3,9 +3,11 @@ Default configuration settings.
 
 Copy this file to Configuration.js before attempting to run Jinx
 */
+const package = require('./package.json');
+
 module.exports = {
     api: {
-        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) Jinx/0.1.0'
+        userAgent: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) Jinx/${package.version}`
     },
     atlas: {
         admins: {},
