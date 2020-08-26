@@ -67,7 +67,7 @@ export default {
             };
 
         getRadioServerStatus().then(response => {
-            const embed = new Discord.RichEmbed(),
+            const embed = new Discord.MessageEmbed(),
                 serverStatus = response.icestats,
                 stations = [];
 

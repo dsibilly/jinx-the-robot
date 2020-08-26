@@ -44,7 +44,7 @@ const wikipedia = {
                 const pageTitle = page.raw.title,
                     canonicalUrl = page.raw.canonicalurl,
                     // Prepare a Discord RichEmbed
-                    embed = new Discord.RichEmbed()
+                    embed = new Discord.MessageEmbed()
                         .setTitle(pageTitle)
                         .setURL(canonicalUrl)
                         .setDescription(summaryText)

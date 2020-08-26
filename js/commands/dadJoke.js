@@ -112,7 +112,7 @@ export default {
 
         // Build a Discord RichEmbed response.
         try {
-            const embed = new Discord.RichEmbed()
+            const embed = new Discord.MessageEmbed()
                     .setDescription(result.joke)
                     .setFooter('Jokes provided by icanhazdadjoke.com'),
                 newMessage = await message.channel.send({
