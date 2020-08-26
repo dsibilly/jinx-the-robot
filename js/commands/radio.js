@@ -23,7 +23,7 @@ const getRadioServerStatus = () => request({
         'User-Agent': config.api.userAgent
     },
     json: true,
-    uri: `http://${config.radio.host}:${config.radio.port}/status-json.xsl`
+    uri: `${config.radio.protocol}://${config.radio.host}:${config.radio.port}/status-json.xsl`
 });
 
 export default {
