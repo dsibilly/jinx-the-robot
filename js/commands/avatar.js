@@ -31,7 +31,7 @@ const Avatar = {
                 null
         });
 
-        message.channel.send(message.author.avatarURL).then(newMessage => {
+        message.channel.send(message.author.displayAvatarURL()).then(newMessage => {
             jinx._commandLog.command('reply', {
                 author: message.author.tag,
                 channel: message.channel ?

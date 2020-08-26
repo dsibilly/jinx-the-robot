@@ -98,7 +98,7 @@ const _diceTower = new _DiceTower(), // A Roll instance
             if (Array.isArray(emojiDice)) {
                 jinx._log.warn('Caching ageTest dice emoji...');
                 emojiDice = emojiDice.reduce((emojiDice, name) => {
-                    emojiDice[name] = jinx._client.emojis.find(emoji => emoji.name === name);
+                    emojiDice[name] = jinx._client.emojis.cache.find(emoji => emoji.name === name);
 
                     return emojiDice;
                 }, {});

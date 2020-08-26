@@ -64,7 +64,7 @@ const atlasServer = config.atlas,
 
                 return portsMap;
             }, {})).then(results => {
-                const embed = new Discord.RichEmbed(),
+                const embed = new Discord.MessageEmbed(),
                     fullPlayerList = Object.keys(results).reduce((fullPlayerList, port) => {
                         const playerList = results[port];
 

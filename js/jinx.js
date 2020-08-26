@@ -145,7 +145,7 @@ const Jinx = make({
             payload = messageContent.substring(commandText.length + me._commandPrefix.length + 1);
 
             // TODO: Refactor this logic so Jinx actually detects when it's being tagged
-            if (message.isMentioned(jinxUser)) {
+            if (message.mentions.has('123456789012345678')) {
                 try {
                     commandText = messageContent.split(' ')[1];
                     payload = messageContent.substring(jinxUser.mention().length + commandText.length + me._commandPrefix.length + 1);
