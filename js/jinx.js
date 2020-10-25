@@ -41,7 +41,9 @@ import Discord from 'discord.js';
 import make from 'isotropic-make';
 import os from 'os';
 import packageInfo from '../package.json';
-import uuid from 'uuid/v4';
+import {
+    v4 as uuid
+} from 'uuid';
 
 /**
 @class Jinx
@@ -166,6 +168,7 @@ const Jinx = make({
             command = Jinx.commands[commandText];
 
             if (command) {
+                me._commands += 1;
                 // Save the command to the command log.
                 me._commandLog.command(commandText, {
                     author: author.tag,
@@ -230,6 +233,7 @@ const Jinx = make({
 
         // Store useful data and functions as protected properties
         me._commandPrefix = config.commandPrefix;
+        me._commands = 0;
         me._hostname = os.hostname;
         me._pid = process.pid;
         me._sessionId = uuid();

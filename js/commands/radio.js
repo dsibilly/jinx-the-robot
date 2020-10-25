@@ -9,7 +9,7 @@ import _Error from 'isotropic-error';
 import config from '../../Configuration';
 import convertNumber from 'number-to-words';
 import Discord from 'discord.js';
-import request from 'request-promise-native';
+import fetch from 'node-fetch';
 
 /**
 Retrieves Icecast2 server status from the configured server.
@@ -18,13 +18,11 @@ Retrieves Icecast2 server status from the configured server.
 @private
 @returns {Promise<Object>}
 */
-const getRadioServerStatus = () => request({
+const getRadioServerStatus = () => fetch(`${config.radio.protocol}://${config.radio.host}:${config.radio.port}/status-json.xsl`, {
     headers: {
         'User-Agent': config.api.userAgent
-    },
-    json: true,
-    uri: `${config.radio.protocol}://${config.radio.host}:${config.radio.port}/status-json.xsl`
-});
+    }
+}).then(response => response.json());
 
 export default {
     /**
