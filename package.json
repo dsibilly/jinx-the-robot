@@ -19,6 +19,8 @@
     "dependencies": {
         "@babel/runtime": "~7.11.2",
         "@dsibilly/dice-tower": "~1.4.0",
+        "@dsibilly/mersenne-twister": "^1.0.5",
+        "async-mutex": "^0.2.4",
         "bunyan": "~2.0.4",
         "common-tags": "^1.8.0",
         "countdown": "~2.6.0",
@@ -119,5 +121,5 @@
         "start": "node lib/index.js | bunyan -L",
         "test": "cross-env BABEL_ENV=test nyc mocha"
     },
-    "version": "0.6.0"
+    "version": "0.7.0-alpha"
 }
