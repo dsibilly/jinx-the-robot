@@ -168,8 +168,7 @@ export default {
                     .setAuthor('Next Scheduled Rocket Launch', jinx._client.user.avatarURL)
                     .setColor(0x00AE86).setThumbnail(nextLaunch.rocket.imageURL)
                     .setFooter('Data provided by launchlibrary.net')
-                    .addField('Launch Vehicle', nextLaunch.rocket.name)
-                    .addField('When?', `${timeToLaunch(windowOpens)}\n${windowOpens}`);
+                    .addField('Launch Vehicle', nextLaunch.rocket.name);
 
                 /*
                 Some of the API response properties are optional or of
@@ -183,6 +182,8 @@ export default {
                         nextLaunch.missions[0].description :
                         '');
                 }
+
+                embed.addField('When?', `${timeToLaunch(windowOpens)}\n${windowOpens}`);
 
                 if (arrayExistsAndHasLength(nextLaunch.vidURLs)) {
                     embed.setURL(nextLaunch.vidURLs[0]);
