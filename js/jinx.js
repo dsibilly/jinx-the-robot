@@ -166,6 +166,7 @@ const Jinx = make({
             command = Jinx.commands[commandText];
 
             if (command) {
+                me._commands += 1;
                 // Save the command to the command log.
                 me._commandLog.command(commandText, {
                     author: author.tag,
@@ -230,6 +231,7 @@ const Jinx = make({
 
         // Store useful data and functions as protected properties
         me._commandPrefix = config.commandPrefix;
+        me._commands = 0;
         me._hostname = os.hostname;
         me._pid = process.pid;
         me._sessionId = uuid();
