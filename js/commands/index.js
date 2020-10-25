@@ -2,6 +2,7 @@
    import atlasChatStart from './atlasChatStart';
    import atlasChatStop from './atlasChatStop';
    import atlasListPlayers from './atlasListPlayers'; */
+import ageAbilities from './ageAbilities';
 import ageTest from './ageTest';
 import avatar from './avatar';
 import dadJoke from './dadJoke';
@@ -12,11 +13,14 @@ import ping from './ping';
 import radio from './radio';
 import remindMe from './remindMe';
 import roll from './roll';
+import stats from './stats';
 import wiki from './wikipedia';
 
 export default {
     aliases: {
         // ac: 'atlasChatSend',
+        ageabil: 'ageAbilities',
+        ageabilities: 'ageAbilities',
         agetest: 'ageTest',
         atest: 'ageTest',
         dadjoke: 'dadJoke',
@@ -26,13 +30,16 @@ export default {
         joke: 'dadJoke',
         nl: 'nextLaunch',
         remind: 'remindMe',
-        remindme: 'remindMe'
+        remindme: 'remindMe',
+        rollChar: 'ageAbilities',
+        rollCharacter: 'ageAbilities'
     },
     commands: {
         /* atlasChatSend,
            atlasChatStart,
            atlasChatStop,
            atlasListPlayers, */
+        ageAbilities,
         ageTest,
         avatar,
         dadJoke,
@@ -43,6 +50,7 @@ export default {
         radio,
         remindMe,
         roll,
+        stats,
         wiki
     }
 };
