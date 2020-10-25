@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jinx-the-robot
+  labels:
+    app: jinx-the-robot
+spec:
+  selector:
+    matchLabels:
+      app: jinx-the-robot
+  template:
+    metadata:
+      labels:
+        app: jinx-the-robot
+    spec:
+      containers:
+      - name: jinx-the-robot
+        image: localhost:32000/jinx-the-robot:0.7.0-alpha
