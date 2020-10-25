@@ -9,7 +9,9 @@ database.
 import _Error from 'isotropic-error';
 import Bunyan from 'bunyan';
 import make from 'isotropic-make';
-import uuid from 'uuid/v4';
+import {
+    v4 as uuid
+} from 'uuid';
 
 /**
 @class CommandLogger

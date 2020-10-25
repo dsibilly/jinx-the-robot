@@ -41,7 +41,9 @@ import Discord from 'discord.js';
 import make from 'isotropic-make';
 import os from 'os';
 import packageInfo from '../package.json';
-import uuid from 'uuid/v4';
+import {
+    v4 as uuid
+} from 'uuid';
 
 /**
 @class Jinx
