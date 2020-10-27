@@ -8,26 +8,6 @@ channel where the command was invoked.
 import _Error from 'isotropic-error';
 import Discord from 'discord.js';
 import icanhazdadjokes from '../api/icanhazdadjokes';
-import promisifyClient from '../util/promisifyClient';
-
-/**
-Wrap the `joke` method of the icanhazdadjoke API in a Promise
-
-@function getRandomJoke
-@private
-@arg {Client} client A node-restclient instance
-@returns {Promise<Object>}
-*/
-const getRandomJoke = client => promisifyClient(client, 'joke'),
-    /**
-    Pass `getRandomJoke` an instantiated node-rest-client configured for
-    use with icanhazdadjoke.com.
-
-    @function getJoke
-    @private
-    @returns {Promise<Object>}
-    */
-    getJoke = () => getRandomJoke(icanhazdadjokes);
 
 export default {
     /**
@@ -86,7 +66,7 @@ export default {
                 });
             },
 
-            result = await getJoke();
+            result = await icanhazdadjokes.joke();
 
         if (!result.joke) {
             jinx._log.warn('No joke found in random joke response');
