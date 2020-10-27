@@ -15,4 +15,4 @@ spec:
     spec:
       containers:
       - name: jinx-the-robot
-        image: localhost:32000/jinx-the-robot:0.7.0
+        image: localhost:32000/jinx-the-robot:0.7.1

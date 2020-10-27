@@ -1,13 +1,10 @@
 /**
-A node-rest-client wrapper around the icanhazdadjoke.com JSON API
+A node-fetch wrapper around the icanhazdadjoke.com JSON API
 
 @module api/icanhazdadjoke
 */
-import {
-    Client
-} from 'node-rest-client';
-
 import config from '../../Configuration';
+import fetch from 'node-fetch';
 
 const args = {
         headers: {
@@ -15,11 +12,19 @@ const args = {
             'User-Agent': config.api.userAgent
         }
     },
-    client = new Client();
-
-client.registerMethod('joke', 'https://icanhazdadjoke.com/', 'GET');
-client.registerMethod('getJokeWithId', 'https://icanhazdadjoke.com/j/${jokeId}', 'GET');
-client.registerMethod('searchForJokesWith', 'https://icanhazdadjoke.com/search?term=${searchTerm}', 'GET');
+    baseUri = 'https://icanhazdadjoke.com/',
+    getEndpoint = uri => fetch(uri, args).then(response => response.json()),
+    client = {
+        getJokeWithId (jokeId) {
+            return getEndpoint(`${baseUri}/j/${jokeId}`);
+        },
+        joke () {
+            return getEndpoint(baseUri);
+        },
+        searchForJokesWith (searchTerm) {
+            return getEndpoint(`${baseUri}/search?term=${searchTerm}`);
+        }
+    };
 
 export default client;
 
