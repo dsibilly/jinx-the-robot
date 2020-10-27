@@ -109,7 +109,7 @@
     },
     "private": true,
     "scripts": {
-        "build": "BABEL_ENV=build babel js -d lib",
+        "build": "BABEL_ENV=build node_modules/.bin/babel js -d lib",
         "coverage": "nyc check-coverage",
         "lint": "node_modules/.bin/eslint js test",
         "posttest": "[ -z \"$npm_config_coverage\" ] || nyc check-coverage",
@@ -120,5 +120,5 @@
         "start": "node lib/index.js | bunyan -L",
         "test": "cross-env BABEL_ENV=test nyc mocha"
     },
-    "version": "0.7.0"
+    "version": "0.7.1-alpha"
 }
