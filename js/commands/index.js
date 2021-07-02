@@ -6,6 +6,7 @@ import ageAbilities from './ageAbilities';
 import ageTest from './ageTest';
 import avatar from './avatar';
 import dadJoke from './dadJoke';
+import dndChar from './dndChar';
 import goodBot from './goodBot';
 import help from './help';
 import nextLaunch from './nextLaunch';
@@ -29,6 +30,7 @@ export default {
         jk: 'dadJoke',
         joke: 'dadJoke',
         nl: 'nextLaunch',
+        randChar: 'dndChar',
         remind: 'remindMe',
         remindme: 'remindMe',
         rollChar: 'ageAbilities',
@@ -43,6 +45,7 @@ export default {
         ageTest,
         avatar,
         dadJoke,
+        dndChar,
         goodBot,
         help,
         nextLaunch,
