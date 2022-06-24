@@ -28,7 +28,7 @@
         "discord.js": "~12.4.1",
         "isotropic-error": "~0.11.0",
         "isotropic-make": "~0.11.0",
-        "node-fetch": "~2.6.1",
+        "node-fetch": "~2.6.7",
         "number-to-words": "~1.2.4",
         "pad-start": "~1.0.2",
         "parse-duration": "~0.4.4",
